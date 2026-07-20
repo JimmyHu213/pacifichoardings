@@ -268,6 +268,15 @@ export default function Home() {
 					overflow: "hidden",
 				}}
 			>
+				<video
+					src="/hero-crane.mp4"
+					autoPlay
+					muted
+					loop
+					playsInline
+					aria-hidden="true"
+					style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }}
+				></video>
 				<div
 					aria-hidden="true"
 					style={{
