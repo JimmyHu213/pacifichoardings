@@ -24,6 +24,18 @@
 		// see https://opennext.js.org/cloudflare/howtos/image
 		"binding": "IMAGES"
 	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "pacifichoardings-db",
+			// Placeholder — replace with the real database UUID after running
+			// `wrangler d1 create pacifichoardings-db` against the account.
+			// Safe to leave as-is for local dev (`--local` migrations/queries
+			// use a local SQLite file keyed by this id, not the real database).
+			"database_id": "00000000-0000-0000-0000-000000000000",
+			"migrations_dir": "migrations"
+		}
+	],
 	"services": [
 		{
 			// Self-reference service binding, the service name must match the worker name

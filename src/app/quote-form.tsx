@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useActionState } from "react";
+import { submitQuote, type QuoteFormState } from "./quote-actions";
+
+const initialState: QuoteFormState = { status: "idle", attempt: 0 };
 
 export default function QuoteForm() {
-	const [submitted, setSubmitted] = useState(false);
+	const [state, formAction, isPending] = useActionState(submitQuote, initialState);
+	const values = state.status === "error" ? state.values : undefined;
 
-	function onSubmit(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setSubmitted(true);
-	}
-
-	if (submitted) {
+	if (state.status === "success") {
 		return (
 			<div>
 				<h3 style={{ fontSize: 22, lineHeight: "24px", letterSpacing: "0.02em", textTransform: "uppercase", margin: 0 }}>
@@ -27,30 +26,54 @@ export default function QuoteForm() {
 	}
 
 	return (
-		<form onSubmit={onSubmit} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+		// Keyed on attempt: React 19 resets uncontrolled fields on every action
+		// submission, so on error this forces a remount that reapplies
+		// defaultValue from what was just submitted instead of leaving it blank.
+		<form
+			key={state.attempt}
+			action={formAction}
+			style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}
+		>
+			{state.status === "error" && (
+				<div
+					role="alert"
+					style={{
+						gridColumn: "1 / -1",
+						padding: "12px 14px",
+						border: "1px solid var(--color-divider)",
+						borderLeft: "3px solid var(--color-accent-700)",
+						background: "var(--color-surface)",
+						fontSize: 13,
+						lineHeight: "20px",
+						color: "var(--color-text)",
+					}}
+				>
+					{state.message}
+				</div>
+			)}
 			<div className="field">
 				<label htmlFor="q-name">Name</label>
-				<input className="input" id="q-name" name="name" type="text" required autoComplete="name" />
+				<input className="input" id="q-name" name="name" type="text" required autoComplete="name" defaultValue={values?.name} />
 			</div>
 			<div className="field">
 				<label htmlFor="q-company">Company</label>
-				<input className="input" id="q-company" name="company" type="text" />
+				<input className="input" id="q-company" name="company" type="text" defaultValue={values?.company} />
 			</div>
 			<div className="field">
 				<label htmlFor="q-email">Email</label>
-				<input className="input" id="q-email" name="email" type="email" required autoComplete="email" />
+				<input className="input" id="q-email" name="email" type="email" required autoComplete="email" defaultValue={values?.email} />
 			</div>
 			<div className="field">
 				<label htmlFor="q-phone">Phone</label>
-				<input className="input" id="q-phone" name="phone" type="tel" autoComplete="tel" />
+				<input className="input" id="q-phone" name="phone" type="tel" autoComplete="tel" defaultValue={values?.phone} />
 			</div>
 			<div className="field" style={{ gridColumn: "1 / -1" }}>
 				<label htmlFor="q-site">Site address or suburb</label>
-				<input className="input" id="q-site" name="site" type="text" required />
+				<input className="input" id="q-site" name="site" type="text" required defaultValue={values?.site} />
 			</div>
 			<div className="field" style={{ gridColumn: "1 / -1" }}>
 				<label htmlFor="q-type">What do you need?</label>
-				<select className="input" id="q-type" name="type">
+				<select className="input" id="q-type" name="type" defaultValue={values?.type}>
 					<option>Class A hoarding</option>
 					<option>Class B hoarding (gantry)</option>
 					<option>Temporary fencing</option>
@@ -66,11 +89,12 @@ export default function QuoteForm() {
 					id="q-details"
 					name="details"
 					placeholder="Frontage length, footpath situation, program dates — whatever you know."
+					defaultValue={values?.details}
 				/>
 			</div>
 			<div style={{ gridColumn: "1 / -1" }}>
-				<button type="submit" className="btn btn-primary btn-block" style={{ minHeight: 44, fontSize: 15 }}>
-					Request a quote
+				<button type="submit" className="btn btn-primary btn-block" style={{ minHeight: 44, fontSize: 15 }} disabled={isPending}>
+					{isPending ? "Sending…" : "Request a quote"}
 				</button>
 			</div>
 		</form>
