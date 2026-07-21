@@ -6,6 +6,7 @@ export interface Stat {
 }
 
 export interface Service {
+	slug: string;
 	title: string;
 	body: string;
 }

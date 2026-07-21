@@ -1,20 +1,28 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { pageGutter } from "@/lib/style-tokens";
-
-const navLinks = [
-	{ href: "#services", label: "Services" },
-	{ href: "#projects", label: "Projects" },
-	{ href: "#faq", label: "Q&A" },
-];
+import type { Service } from "@/lib/content";
+import NavDropdown from "./nav-dropdown";
+import MobileMenu from "./mobile-menu";
 
 /* Home page sits over the full-bleed hero video, so the nav there is a
    transparent overlay with light text. Every other page is a normal light
    page and gets a sticky, solid nav instead. */
-export default function SiteHeader() {
+export default function SiteHeader({ services }: { services: Service[] }) {
 	const pathname = usePathname();
 	const isOverlay = pathname === "/";
+
+	// In-page anchors (#projects, #faq, #quote) only resolve on the home page —
+	// from any other page they need to point back at "/" first.
+	const anchor = (id: string) => (isOverlay ? `#${id}` : `/#${id}`);
+
+	const serviceLinks = services.map((service) => ({ href: `/services/${service.slug}`, label: service.title }));
+	const anchorLinks = [
+		{ href: anchor("projects"), label: "Projects" },
+		{ href: anchor("faq"), label: "Q&A" },
+	];
 
 	return (
 		<nav
@@ -30,12 +38,11 @@ export default function SiteHeader() {
 				boxShadow: isOverlay ? "none" : "var(--shadow-sm)",
 				color: isOverlay ? "var(--color-bg)" : "var(--color-text)",
 				justifyContent: "center",
-				flexWrap: "wrap",
-				rowGap: 8,
 				paddingInline: `max(${pageGutter}, calc((100% - 1240px) / 2 + ${pageGutter}))`,
 			}}
 		>
-			<span
+			<Link
+				href="/"
 				className="nav-brand"
 				style={{
 					textTransform: "uppercase",
@@ -44,41 +51,44 @@ export default function SiteHeader() {
 					alignItems: "baseline",
 					gap: 10,
 					margin: 0,
+					color: "inherit",
+					textDecoration: "none",
 				}}
 			>
 				<span style={{ color: "var(--color-accent-300)", fontWeight: 400 }}>+</span>Pacific Hoardings
-			</span>
-			{navLinks.map((link) => (
-				<a key={link.href} href={link.href} className={isOverlay ? "ph-nav-link" : undefined} style={{ whiteSpace: "nowrap" }}>
-					{link.label}
+			</Link>
+
+			<div className="nav-desktop">
+				<NavDropdown label="Services" items={serviceLinks} triggerClassName={isOverlay ? "ph-nav-link" : "ph-nav-link-solid"} />
+				{anchorLinks.map((link) => (
+					<Link key={link.href} href={link.href} className={isOverlay ? "ph-nav-link" : undefined} style={{ whiteSpace: "nowrap" }}>
+						{link.label}
+					</Link>
+				))}
+				<a
+					href="tel:1300000000"
+					style={{ whiteSpace: "nowrap", color: isOverlay ? "var(--color-bg)" : "var(--color-text)", fontFeatureSettings: "'tnum' 1", fontWeight: 600 }}
+				>
+					1300 000 000
 				</a>
-			))}
-			<a
-				href="tel:1300000000"
-				style={{
-					whiteSpace: "nowrap",
-					color: isOverlay ? "var(--color-bg)" : "var(--color-text)",
-					fontFeatureSettings: "'tnum' 1",
-					fontWeight: 600,
-				}}
-			>
-				1300 000 000
-			</a>
-			<a
-				href="#quote"
-				className={isOverlay ? "ph-nav-cta" : undefined}
-				style={{
-					whiteSpace: "nowrap",
-					color: isOverlay ? "var(--color-bg)" : "var(--color-text)",
-					fontWeight: 600,
-					letterSpacing: "0.06em",
-					textTransform: "uppercase",
-					borderBottom: `1px solid ${isOverlay ? "var(--color-accent-300)" : "var(--color-accent)"}`,
-					paddingBottom: 2,
-				}}
-			>
-				Request a quote
-			</a>
+				<Link
+					href={anchor("quote")}
+					className={isOverlay ? "ph-nav-cta" : undefined}
+					style={{
+						whiteSpace: "nowrap",
+						color: isOverlay ? "var(--color-bg)" : "var(--color-text)",
+						fontWeight: 600,
+						letterSpacing: "0.06em",
+						textTransform: "uppercase",
+						borderBottom: `1px solid ${isOverlay ? "var(--color-accent-300)" : "var(--color-accent)"}`,
+						paddingBottom: 2,
+					}}
+				>
+					Request a quote
+				</Link>
+			</div>
+
+			<MobileMenu servicesItems={serviceLinks} links={anchorLinks} quoteHref={anchor("quote")} />
 		</nav>
 	);
 }

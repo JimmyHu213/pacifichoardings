@@ -1,42 +1,12 @@
-import type { CSSProperties } from "react";
 import ImageSlot from "./image-slot";
 import QuoteForm from "./quote-form";
 import ScrollReveal from "./scroll-reveal";
 import SiteFooter from "@/components/site-footer";
-import { pageGutter } from "@/lib/style-tokens";
+import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
 import { getClients, getFaqs, getProjects, getServices, getStats, getTestimonials } from "@/lib/content";
 import type { Project } from "@/lib/content";
 
 const rise = (delay: string) => `ph-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${delay} both`;
-
-const kicker: CSSProperties = {
-	display: "block",
-	fontSize: 13,
-	lineHeight: "12px",
-	letterSpacing: "0.08em",
-	textTransform: "uppercase",
-	fontWeight: 600,
-	color: "var(--color-accent-700)",
-	fontFeatureSettings: "'tnum' 1",
-	margin: "0 0 12px",
-};
-
-const kickerRule: CSSProperties = { height: 1, border: 0, margin: "0 0 24px", background: "var(--color-divider)" };
-
-const sectionTitle: CSSProperties = {
-	fontSize: "clamp(32px, 3.4vw, 44px)",
-	lineHeight: 1.06,
-	letterSpacing: "0.02em",
-	textTransform: "uppercase",
-	margin: 0,
-};
-
-const bodyCopy: CSSProperties = {
-	fontSize: 15,
-	lineHeight: "24px",
-	margin: 0,
-	color: "color-mix(in srgb, var(--color-text) 78%, transparent)",
-};
 
 function Corners() {
 	return (
