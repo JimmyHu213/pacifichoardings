@@ -14,13 +14,13 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 	const pathname = usePathname();
 	const isOverlay = pathname === "/";
 
-	// In-page anchors (#projects, #faq, #quote) only resolve on the home page —
-	// from any other page they need to point back at "/" first.
+	// In-page anchors (#faq, #quote) only resolve on the home page — from any
+	// other page they need to point back at "/" first.
 	const anchor = (id: string) => (isOverlay ? `#${id}` : `/#${id}`);
 
 	const serviceLinks = services.map((service) => ({ href: `/services/${service.slug}`, label: service.title }));
 	const anchorLinks = [
-		{ href: anchor("projects"), label: "Projects" },
+		{ href: "/projects", label: "Projects" },
 		{ href: anchor("faq"), label: "Q&A" },
 	];
 

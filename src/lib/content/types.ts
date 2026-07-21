@@ -34,10 +34,19 @@ export interface Service {
 	faqIds: string[];
 }
 
+export interface ProjectImage {
+	placeholder: string;
+	label: string;
+}
+
 export interface Project {
 	id: string;
 	title: string;
 	detail: string;
+	serviceSlug: string;
+	timeframe: string;
+	description: string;
+	image: ProjectImage;
 }
 
 export interface Testimonial {
