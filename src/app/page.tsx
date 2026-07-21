@@ -4,6 +4,8 @@ import QuoteForm from "./quote-form";
 import ScrollReveal from "./scroll-reveal";
 import SiteFooter from "@/components/site-footer";
 import { pageGutter } from "@/lib/style-tokens";
+import { getClients, getFaqs, getProjects, getServices, getStats, getTestimonials } from "@/lib/content";
+import type { Project } from "@/lib/content";
 
 const rise = (delay: string) => `ph-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${delay} both`;
 
@@ -36,96 +38,6 @@ const bodyCopy: CSSProperties = {
 	color: "color-mix(in srgb, var(--color-text) 78%, transparent)",
 };
 
-const clients = [
-	"Harbourline Constructions",
-	"Westgate Civil",
-	"Meridian Developments",
-	"Stonefield Group",
-	"Axiom Build",
-	"Port & Pier Projects",
-	"Crestline Developers",
-	"NSW Public Works",
-];
-
-const stats = [
-	{ value: "A + B", accent: false, label: "Classes installed", detail: "Fence-type and overhead gantry" },
-	{ value: "AS 4687", accent: true, label: "Certified to", detail: "Engineer-signed on every job" },
-	{ value: "24 h", accent: false, label: "Quote turnaround", detail: "Measured site, itemised price" },
-	{ value: "0", accent: true, label: "Failed inspections", detail: "Across every council we work in" },
-];
-
-const services = [
-	{
-		title: "Class A hoarding",
-		body: "Fence-type hoarding at ground level — solid, plumb and lockable. Steel-framed ply or panel systems with dust control, sightline screening and pedestrian doors where the site needs them.",
-	},
-	{
-		title: "Class B hoarding",
-		body: "Overhead gantry protection where work happens above a footpath. Engineered decks rated to the drawings, under-awning lighting, and certification the council accepts.",
-	},
-	{
-		title: "Temporary fencing",
-		body: "Chain-mesh panels, braced, counterweighted and stood the same day. For the stages before the hoarding goes up and after it comes down.",
-	},
-	{
-		title: "Signage & graphics wraps",
-		body: "Full-print wraps, project signage and anti-graffiti laminate. The safest wall on the street may as well sell the building behind it.",
-	},
-	{
-		title: "Design & certification",
-		body: "Every hoarding drawn and signed to AS 4687 by our engineers. Load cases, tie-downs and documentation your certifier accepts the first time.",
-	},
-	{
-		title: "Council permits",
-		body: "We draw it, certify it and lodge it — hoarding permits, footpath occupation and traffic control plans. You build; we handle the paperwork.",
-	},
-];
-
-const projects = [
-	{ id: "proj-1", title: "Commercial tower", detail: "Class B gantry, 140 lm, Sydney CBD" },
-	{ id: "proj-2", title: "Mixed-use development", detail: "Class A with full graphics wrap, Parramatta" },
-	{ id: "proj-3", title: "Civic works", detail: "Temporary fencing and staged hoarding, Newcastle" },
-	{ id: "proj-4", title: "Rail corridor upgrade", detail: "Class A, 300 lm staged program, Western Sydney" },
-	{ id: "proj-5", title: "Heritage facade retention", detail: "Class B gantry with scaffold interface, The Rocks" },
-	{ id: "proj-6", title: "Shopping centre works", detail: "Internal hoarding with graphics wrap, Chatswood" },
-];
-
-const testimonials = [
-	{
-		quote:
-			"“They had the Class B up over the footpath in a weekend — certified, lit, and signed off by council before we'd finished demo.”",
-		source: "— Site manager, tier-one builder, Sydney",
-	},
-	{
-		quote:
-			"“Quote on Tuesday, hoarding standing Friday. The graphics wrap made the client happier than the building did.”",
-		source: "— Development director, North Sydney",
-	},
-];
-
-const faqs = [
-	{
-		q: "Do I need council approval for a hoarding?",
-		a: "If any part of the hoarding stands on or over public land — a footpath, a road reserve, a laneway — NSW councils require a hoarding permit before installation. We prepare the drawings, the engineering certification and the traffic management plan, and lodge the application for you.",
-	},
-	{
-		q: "What's the difference between Class A and Class B?",
-		a: "Class A is a fence-type hoarding at ground level — it separates the public from the site. Class B adds an engineered overhead deck that protects pedestrians from falling objects, and is required wherever work happens above a footpath that stays open.",
-	},
-	{
-		q: "How fast can you install?",
-		a: "You'll have a measured, itemised quote within 24 hours of the site walk. Class A hoardings typically stand within days of permit approval; Class B programs depend on the engineering and council timeline — we'll give you a date and hold it.",
-	},
-	{
-		q: "Do you provide engineering certification?",
-		a: "Yes — every hoarding we install is designed and signed off to AS 4687 by our engineers, with documentation you can hand straight to your certifier or principal contractor.",
-	},
-	{
-		q: "Can you print our branding on the hoarding?",
-		a: "Full-wrap printed graphics, project and marketing signage, and anti-graffiti laminate — plus all the statutory signage the site needs. Supply the artwork or have our studio lay it out.",
-	},
-];
-
 function Corners() {
 	return (
 		<>
@@ -137,7 +49,7 @@ function Corners() {
 	);
 }
 
-function ClientMarquee({ hidden }: { hidden?: boolean }) {
+function ClientMarquee({ clients, hidden }: { clients: string[]; hidden?: boolean }) {
 	return (
 		<div
 			aria-hidden={hidden || undefined}
@@ -169,7 +81,7 @@ function ClientMarquee({ hidden }: { hidden?: boolean }) {
 	);
 }
 
-function ProjectRail({ hidden }: { hidden?: boolean }) {
+function ProjectRail({ projects, hidden }: { projects: Project[]; hidden?: boolean }) {
 	return (
 		<div
 			aria-hidden={hidden || undefined}
@@ -199,7 +111,16 @@ function ProjectRail({ hidden }: { hidden?: boolean }) {
 	);
 }
 
-export default function Home() {
+export default async function Home() {
+	const [clients, stats, services, projects, testimonials, faqs] = await Promise.all([
+		getClients(),
+		getStats(),
+		getServices(),
+		getProjects(),
+		getTestimonials(),
+		getFaqs(),
+	]);
+
 	return (
 		<>
 			<ScrollReveal />
@@ -397,8 +318,8 @@ export default function Home() {
 								maskImage: "linear-gradient(90deg, transparent, black 6%, black 94%, transparent)",
 							}}
 						>
-							<ClientMarquee />
-							<ClientMarquee hidden />
+							<ClientMarquee clients={clients} />
+							<ClientMarquee clients={clients} hidden />
 						</div>
 					</div>
 				</div>
@@ -602,8 +523,8 @@ export default function Home() {
 						className="ph-rail ph-reveal"
 						style={{ display: "flex", overflow: "hidden", maskImage: "linear-gradient(90deg, transparent, black 4%, black 96%, transparent)" }}
 					>
-						<ProjectRail />
-						<ProjectRail hidden />
+						<ProjectRail projects={projects} />
+						<ProjectRail projects={projects} hidden />
 					</div>
 				</section>
 
