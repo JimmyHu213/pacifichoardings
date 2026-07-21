@@ -56,6 +56,9 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
 					<Link href="/admin/projects" style={{ color: "inherit", textDecoration: "none" }}>
 						Projects
 					</Link>
+					<Link href="/admin/faqs" style={{ color: "inherit", textDecoration: "none" }}>
+						FAQs
+					</Link>
 				</nav>
 				<form action={logoutAction}>
 					<button type="submit" className="btn btn-secondary" style={{ fontSize: 13 }}>

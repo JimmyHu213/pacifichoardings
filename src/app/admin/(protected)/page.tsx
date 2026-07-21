@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 const sections = [
 	{ href: "/admin/quotes", title: "Quotes", detail: "Quote requests from the website, newest first." },
 	{ href: "/admin/projects", title: "Projects", detail: "The project gallery — add, edit and photograph installations." },
+	{ href: "/admin/faqs", title: "FAQs", detail: "The questions answered on the home, compliance and service pages." },
 ];
 
 export default function AdminDashboardPage() {
