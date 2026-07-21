@@ -37,7 +37,6 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 				borderBottom: isOverlay ? 0 : "1px solid var(--color-divider)",
 				boxShadow: isOverlay ? "none" : "var(--shadow-sm)",
 				color: isOverlay ? "var(--color-bg)" : "var(--color-text)",
-				justifyContent: "center",
 				paddingInline: `max(${pageGutter}, calc((100% - 1240px) / 2 + ${pageGutter}))`,
 			}}
 		>
@@ -50,7 +49,6 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 					display: "inline-flex",
 					alignItems: "baseline",
 					gap: 10,
-					margin: 0,
 					color: "inherit",
 					textDecoration: "none",
 				}}

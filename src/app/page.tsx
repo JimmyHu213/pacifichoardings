@@ -140,21 +140,6 @@ export default async function Home() {
 						textAlign: "center",
 					}}
 				>
-					<span
-						style={{
-							display: "block",
-							fontSize: 13,
-							lineHeight: "12px",
-							letterSpacing: "0.12em",
-							textTransform: "uppercase",
-							fontWeight: 600,
-							color: "var(--color-accent-300)",
-							margin: "0 0 20px",
-							animation: rise("0.1s"),
-						}}
-					>
-						Class A + B hoardings · NSW · Australia-wide
-					</span>
 					<h1
 						style={{
 							fontFamily: "var(--font-heading)",
@@ -165,53 +150,27 @@ export default async function Home() {
 							textTransform: "uppercase",
 							margin: 0,
 							color: "var(--color-bg)",
-							animation: rise("0.22s"),
+							animation: rise("0.1s"),
 						}}
 					>
 						<span style={{ display: "block" }}>Hoarding that holds.</span>
 						<span style={{ display: "block", color: "var(--color-accent-300)" }}>Paperwork that passes.</span>
 					</h1>
-					<p
+					<span
 						style={{
-							fontSize: 17,
-							lineHeight: "26px",
-							maxWidth: "44ch",
-							margin: "28px auto 0",
-							color: "color-mix(in srgb, var(--color-bg) 82%, transparent)",
-							animation: rise("0.38s"),
+							display: "block",
+							fontSize: 13,
+							lineHeight: "12px",
+							letterSpacing: "0.12em",
+							textTransform: "uppercase",
+							fontWeight: 600,
+							color: "var(--color-accent-300)",
+							margin: "28px 0 0",
+							animation: rise("0.3s"),
 						}}
 					>
-						Designed, certified and installed to AS 4687 — approved by council, standing straight until the day you
-						don&rsquo;t need it.
-					</p>
-					<div
-						style={{
-							display: "flex",
-							gap: "var(--space-3)",
-							flexWrap: "wrap",
-							justifyContent: "center",
-							marginTop: 32,
-							animation: rise("0.52s"),
-						}}
-					>
-						<a href="#quote" className="btn btn-primary" style={{ minHeight: 44, paddingInline: 22, fontSize: 15 }}>
-							Request a quote
-						</a>
-						<a
-							href="#services"
-							className="btn ph-hero-ghost"
-							style={{
-								minHeight: 44,
-								paddingInline: 22,
-								fontSize: 15,
-								color: "var(--color-bg)",
-								borderColor: "color-mix(in srgb, var(--color-bg) 45%, transparent)",
-								background: "transparent",
-							}}
-						>
-							See what we put up
-						</a>
-					</div>
+						Class A + B hoardings · NSW · Australia-wide
+					</span>
 				</div>
 				<a
 					href="#services"
