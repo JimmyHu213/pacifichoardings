@@ -21,6 +21,7 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 	const serviceLinks = services.map((service) => ({ href: `/services/${service.slug}`, label: service.title }));
 	const anchorLinks = [
 		{ href: "/projects", label: "Projects" },
+		{ href: "/about", label: "About" },
 		{ href: anchor("faq"), label: "Q&A" },
 	];
 
