@@ -1,23 +1,13 @@
-import ImageSlot from "./image-slot";
 import QuoteForm from "./quote-form";
-import ScrollReveal from "./scroll-reveal";
+import Corners from "@/components/corners";
+import ImageSlot from "@/components/image-slot";
+import ScrollReveal from "@/components/scroll-reveal";
 import SiteFooter from "@/components/site-footer";
 import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
 import { getClients, getFaqs, getProjects, getServices, getStats, getTestimonials } from "@/lib/content";
 import type { Project } from "@/lib/content";
 
 const rise = (delay: string) => `ph-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${delay} both`;
-
-function Corners() {
-	return (
-		<>
-			<i className="corner tl"></i>
-			<i className="corner tr"></i>
-			<i className="corner bl"></i>
-			<i className="corner br"></i>
-		</>
-	);
-}
 
 function ClientMarquee({ clients, hidden }: { clients: string[]; hidden?: boolean }) {
 	return (
