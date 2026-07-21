@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -45,6 +46,17 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
 				>
 					Pacific Hoardings — Admin
 				</span>
+				<nav style={{ display: "flex", gap: 20, marginRight: "auto", marginLeft: 24, fontSize: 14 }}>
+					<Link href="/admin" style={{ color: "inherit", textDecoration: "none" }}>
+						Dashboard
+					</Link>
+					<Link href="/admin/quotes" style={{ color: "inherit", textDecoration: "none" }}>
+						Quotes
+					</Link>
+					<Link href="/admin/projects" style={{ color: "inherit", textDecoration: "none" }}>
+						Projects
+					</Link>
+				</nav>
 				<form action={logoutAction}>
 					<button type="submit" className="btn btn-secondary" style={{ fontSize: 13 }}>
 						Log out
