@@ -8,6 +8,9 @@ export type ProjectFormState = { status: "idle" } | { status: "error"; message: 
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+// Allowlist, not startsWith("image/") — image/svg+xml can carry scripts and
+// /media serves from the app origin.
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"]);
 const SERVICE_SLUGS = new Set(services.map((s) => s.slug));
 
 function field(formData: FormData, key: string, maxLength: number): string {
@@ -37,7 +40,7 @@ export async function saveProjectAction(_prevState: ProjectFormState, formData: 
 	const image = formData.get("image");
 	const hasNewImage = image instanceof File && image.size > 0;
 	if (hasNewImage) {
-		if (!image.type.startsWith("image/")) return { status: "error", message: "The photo must be an image file." };
+		if (!ALLOWED_IMAGE_TYPES.has(image.type)) return { status: "error", message: "Use a JPEG, PNG, WEBP, AVIF or GIF photo." };
 		if (image.size > MAX_IMAGE_BYTES) return { status: "error", message: "The photo must be under 5MB." };
 	}
 

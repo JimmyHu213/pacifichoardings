@@ -15,11 +15,16 @@ export async function GET(_request: Request, { params }: { params: Promise<{ key
 		return new Response("Not found", { status: 404 });
 	}
 
+	// Belt-and-braces against anything script-capable ever landing in the
+	// bucket: no sniffing, no script execution, render-only disposition.
 	return new Response(object.body, {
 		headers: {
 			"Content-Type": object.httpMetadata?.contentType ?? "application/octet-stream",
 			"Cache-Control": "public, max-age=31536000, immutable",
 			ETag: object.httpEtag,
+			"Content-Disposition": "inline",
+			"X-Content-Type-Options": "nosniff",
+			"Content-Security-Policy": "sandbox; default-src 'none'",
 		},
 	});
 }
