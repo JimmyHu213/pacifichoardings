@@ -2,8 +2,9 @@ import type { CSSProperties } from "react";
 import ImageSlot from "./image-slot";
 import QuoteForm from "./quote-form";
 import ScrollReveal from "./scroll-reveal";
+import SiteFooter from "@/components/site-footer";
+import { pageGutter } from "@/lib/style-tokens";
 
-const pageGutter = "clamp(20px, 5vw, 72px)";
 const rise = (delay: string) => `ph-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${delay} both`;
 
 const kicker: CSSProperties = {
@@ -202,69 +203,6 @@ export default function Home() {
 	return (
 		<>
 			<ScrollReveal />
-
-			<nav
-				className="nav"
-				style={{
-					position: "absolute",
-					top: 0,
-					left: 0,
-					right: 0,
-					zIndex: 20,
-					background: "transparent",
-					borderBottom: 0,
-					boxShadow: "none",
-					color: "var(--color-bg)",
-					justifyContent: "center",
-					flexWrap: "wrap",
-					rowGap: 8,
-					paddingInline: `max(${pageGutter}, calc((100% - 1240px) / 2 + ${pageGutter}))`,
-				}}
-			>
-				<span
-					className="nav-brand"
-					style={{
-						textTransform: "uppercase",
-						letterSpacing: "0.04em",
-						display: "inline-flex",
-						alignItems: "baseline",
-						gap: 10,
-						margin: 0,
-					}}
-				>
-					<span style={{ color: "var(--color-accent-300)", fontWeight: 400 }}>+</span>Pacific Hoardings
-				</span>
-				<a href="#services" className="ph-nav-link" style={{ whiteSpace: "nowrap" }}>
-					Services
-				</a>
-				<a href="#projects" className="ph-nav-link" style={{ whiteSpace: "nowrap" }}>
-					Projects
-				</a>
-				<a href="#faq" className="ph-nav-link" style={{ whiteSpace: "nowrap" }}>
-					Q&amp;A
-				</a>
-				<a
-					href="tel:1300000000"
-					style={{ whiteSpace: "nowrap", color: "var(--color-bg)", fontFeatureSettings: "'tnum' 1", fontWeight: 600 }}
-				>
-					1300 000 000
-				</a>
-				<a
-					href="#quote"
-					className="ph-nav-cta"
-					style={{
-						whiteSpace: "nowrap",
-						color: "var(--color-bg)",
-						fontWeight: 600,
-						letterSpacing: "0.06em",
-						textTransform: "uppercase",
-						borderBottom: "1px solid var(--color-accent-300)",
-						paddingBottom: 2,
-					}}
-				>
-					Request a quote
-				</a>
-			</nav>
 
 			<section
 				style={{
@@ -822,23 +760,7 @@ export default function Home() {
 						<i className="corner br" style={{ color: "color-mix(in srgb, var(--color-bg) 70%, transparent)" }}></i>
 						<QuoteForm />
 					</div>
-					<footer
-						style={{
-							gridColumn: "1 / -1",
-							paddingTop: 24,
-							borderTop: "1px solid color-mix(in srgb, var(--color-bg) 22%, transparent)",
-							fontSize: 13,
-							lineHeight: "24px",
-							color: "color-mix(in srgb, var(--color-bg) 65%, transparent)",
-							display: "flex",
-							flexWrap: "wrap",
-							gap: "8px 32px",
-							justifyContent: "space-between",
-						}}
-					>
-						<span>Pacific Hoardings Pty Ltd · ABN 00 000 000 000</span>
-						<span>NSW-based · Servicing Australia-wide</span>
-					</footer>
+					<SiteFooter />
 				</div>
 			</section>
 		</>

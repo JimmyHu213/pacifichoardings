@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed } from "next/font/google";
+import SiteHeader from "@/components/site-header";
 import "./globals.css";
 
 const barlow = Barlow({
@@ -30,7 +31,10 @@ export default function RootLayout({
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
 			</head>
-			<body className={`${barlow.variable} ${barlowCondensed.variable}`}>{children}</body>
+			<body className={`${barlow.variable} ${barlowCondensed.variable}`}>
+				<SiteHeader />
+				{children}
+			</body>
 		</html>
 	);
 }
