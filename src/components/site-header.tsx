@@ -22,6 +22,7 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 	const anchorLinks = [
 		{ href: "/projects", label: "Projects" },
 		{ href: "/about", label: "About" },
+		{ href: "/compliance", label: "Compliance" },
 		{ href: anchor("faq"), label: "Q&A" },
 	];
 
