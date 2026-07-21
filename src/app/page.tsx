@@ -215,12 +215,22 @@ export default function Home() {
 					borderBottom: 0,
 					boxShadow: "none",
 					color: "var(--color-bg)",
+					justifyContent: "center",
+					flexWrap: "wrap",
+					rowGap: 8,
 					paddingInline: `max(${pageGutter}, calc((100% - 1240px) / 2 + ${pageGutter}))`,
 				}}
 			>
 				<span
 					className="nav-brand"
-					style={{ textTransform: "uppercase", letterSpacing: "0.04em", display: "inline-flex", alignItems: "baseline", gap: 10 }}
+					style={{
+						textTransform: "uppercase",
+						letterSpacing: "0.04em",
+						display: "inline-flex",
+						alignItems: "baseline",
+						gap: 10,
+						margin: 0,
+					}}
 				>
 					<span style={{ color: "var(--color-accent-300)", fontWeight: 400 }}>+</span>Pacific Hoardings
 				</span>
@@ -262,7 +272,6 @@ export default function Home() {
 					minHeight: "100svh",
 					display: "flex",
 					flexDirection: "column",
-					justifyContent: "flex-end",
 					background: "var(--color-accent-900)",
 					color: "var(--color-bg)",
 					overflow: "hidden",
@@ -297,79 +306,128 @@ export default function Home() {
 							"linear-gradient(180deg, color-mix(in srgb, var(--color-accent-900) 45%, transparent) 0%, color-mix(in srgb, var(--color-accent-900) 20%, transparent) 45%, color-mix(in srgb, var(--color-accent-900) 78%, transparent) 100%)",
 					}}
 				></div>
-				<div style={{ position: "relative", width: "100%", maxWidth: 1240, margin: "0 auto", padding: `140px ${pageGutter} 0` }}>
-					<div style={{ maxWidth: "72ch" }}>
-						<span
-							style={{
-								display: "block",
-								fontSize: 13,
-								lineHeight: "12px",
-								letterSpacing: "0.12em",
-								textTransform: "uppercase",
-								fontWeight: 600,
-								color: "var(--color-accent-300)",
-								margin: "0 0 20px",
-								animation: rise("0.1s"),
-							}}
-						>
-							Class A + B hoardings · NSW · Australia-wide
-						</span>
-						<h1
-							style={{
-								fontFamily: "var(--font-heading)",
-								fontWeight: 600,
-								fontSize: "clamp(52px, 6vw, 88px)",
-								lineHeight: 1.02,
-								letterSpacing: "0.01em",
-								textTransform: "uppercase",
-								margin: "0 0 0 -0.052em",
-								color: "var(--color-bg)",
-								animation: rise("0.22s"),
-							}}
-						>
-							<span style={{ display: "block" }}>Hoarding</span>
-							<span style={{ display: "block" }}>that holds.</span>
-							<span style={{ display: "block", color: "var(--color-accent-300)" }}>Paperwork</span>
-							<span style={{ display: "block", color: "var(--color-accent-300)" }}>that passes.</span>
-						</h1>
-						<p
-							style={{
-								fontSize: 17,
-								lineHeight: "26px",
-								maxWidth: "52ch",
-								margin: "28px 0 0",
-								color: "color-mix(in srgb, var(--color-bg) 82%, transparent)",
-								animation: rise("0.38s"),
-							}}
-						>
-							We design, certify and install site hoardings for builders, developers and government — engineered to AS 4687,
-							approved by council, and standing straight until the day you don&rsquo;t need them.
-						</p>
-						<div style={{ display: "flex", gap: "var(--space-3)", flexWrap: "wrap", marginTop: 32, animation: rise("0.52s") }}>
-							<a href="#quote" className="btn btn-primary" style={{ minHeight: 44, paddingInline: 22, fontSize: 15 }}>
-								Request a quote
-							</a>
-							<a
-								href="#services"
-								className="btn ph-hero-ghost"
-								style={{
-									minHeight: 44,
-									paddingInline: 22,
-									fontSize: 15,
-									color: "var(--color-bg)",
-									borderColor: "color-mix(in srgb, var(--color-bg) 45%, transparent)",
-									background: "transparent",
-								}}
-							>
-								See what we put up
-							</a>
-						</div>
-					</div>
-				</div>
 				<div
 					style={{
 						position: "relative",
-						marginTop: "clamp(56px, 8vh, 96px)",
+						flex: 1,
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						justifyContent: "center",
+						width: "100%",
+						maxWidth: 1240,
+						margin: "0 auto",
+						padding: `140px ${pageGutter} 0`,
+						textAlign: "center",
+					}}
+				>
+					<span
+						style={{
+							display: "block",
+							fontSize: 13,
+							lineHeight: "12px",
+							letterSpacing: "0.12em",
+							textTransform: "uppercase",
+							fontWeight: 600,
+							color: "var(--color-accent-300)",
+							margin: "0 0 20px",
+							animation: rise("0.1s"),
+						}}
+					>
+						Class A + B hoardings · NSW · Australia-wide
+					</span>
+					<h1
+						style={{
+							fontFamily: "var(--font-heading)",
+							fontWeight: 600,
+							fontSize: "clamp(44px, 5.5vw, 78px)",
+							lineHeight: 1.04,
+							letterSpacing: "0.01em",
+							textTransform: "uppercase",
+							margin: 0,
+							color: "var(--color-bg)",
+							animation: rise("0.22s"),
+						}}
+					>
+						<span style={{ display: "block" }}>Hoarding that holds.</span>
+						<span style={{ display: "block", color: "var(--color-accent-300)" }}>Paperwork that passes.</span>
+					</h1>
+					<p
+						style={{
+							fontSize: 17,
+							lineHeight: "26px",
+							maxWidth: "44ch",
+							margin: "28px auto 0",
+							color: "color-mix(in srgb, var(--color-bg) 82%, transparent)",
+							animation: rise("0.38s"),
+						}}
+					>
+						Designed, certified and installed to AS 4687 — approved by council, standing straight until the day you
+						don&rsquo;t need it.
+					</p>
+					<div
+						style={{
+							display: "flex",
+							gap: "var(--space-3)",
+							flexWrap: "wrap",
+							justifyContent: "center",
+							marginTop: 32,
+							animation: rise("0.52s"),
+						}}
+					>
+						<a href="#quote" className="btn btn-primary" style={{ minHeight: 44, paddingInline: 22, fontSize: 15 }}>
+							Request a quote
+						</a>
+						<a
+							href="#services"
+							className="btn ph-hero-ghost"
+							style={{
+								minHeight: 44,
+								paddingInline: 22,
+								fontSize: 15,
+								color: "var(--color-bg)",
+								borderColor: "color-mix(in srgb, var(--color-bg) 45%, transparent)",
+								background: "transparent",
+							}}
+						>
+							See what we put up
+						</a>
+					</div>
+				</div>
+				<a
+					href="#services"
+					aria-label="Scroll down to services"
+					style={{
+						position: "relative",
+						alignSelf: "center",
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						gap: 10,
+						margin: "40px 0 28px",
+						color: "color-mix(in srgb, var(--color-bg) 70%, transparent)",
+						animation: rise("0.68s"),
+					}}
+				>
+					<span style={{ fontSize: 11, lineHeight: "12px", letterSpacing: "0.28em", textTransform: "uppercase", fontWeight: 600 }}>
+						Scroll
+					</span>
+					<span
+						aria-hidden="true"
+						style={{
+							display: "block",
+							width: 1,
+							height: 44,
+							overflow: "hidden",
+							background: "color-mix(in srgb, var(--color-bg) 25%, transparent)",
+						}}
+					>
+						<span className="ph-scroll-line" style={{ display: "block", width: "100%", height: "100%", background: "var(--color-accent-300)" }}></span>
+					</span>
+				</a>
+				<div
+					style={{
+						position: "relative",
 						borderTop: "1px solid color-mix(in srgb, var(--color-bg) 25%, transparent)",
 						animation: "ph-rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both",
 					}}

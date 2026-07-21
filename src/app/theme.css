@@ -189,10 +189,13 @@ html { scroll-behavior: smooth; }
 @keyframes ph-grid-drift { to { transform: translate(72px, 72px); } }
 .ph-rail:hover > * { animation-play-state: paused; }
 @keyframes ph-rise { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: none; } }
+@keyframes ph-scroll { from { transform: translateY(-100%); } to { transform: translateY(100%); } }
+.ph-scroll-line { animation: ph-scroll 2s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
 .ph-reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
 .ph-reveal.is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .ph-reveal { opacity: 1; transform: none; transition: none; }
+  .ph-scroll-line { animation: none; }
   [style*="ph-rise"] { animation: none !important; }
 }
 body { margin: 0; text-wrap: pretty; }
