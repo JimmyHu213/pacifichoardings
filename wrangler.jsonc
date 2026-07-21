@@ -28,11 +28,7 @@
 		{
 			"binding": "DB",
 			"database_name": "pacifichoardings-db",
-			// Placeholder — replace with the real database UUID after running
-			// `wrangler d1 create pacifichoardings-db` against the account.
-			// Safe to leave as-is for local dev (`--local` migrations/queries
-			// use a local SQLite file keyed by this id, not the real database).
-			"database_id": "00000000-0000-0000-0000-000000000000",
+			"database_id": "ebad3e1e-c5f7-4ad8-99c1-76afd34b311f",
 			"migrations_dir": "migrations"
 		}
 	],
@@ -40,9 +36,6 @@
 		{
 			// Project gallery photo storage — distinct from the IMAGES binding
 			// above, which is OpenNext's image *optimization* hook, not storage.
-			// The real bucket needs `wrangler r2 bucket create
-			// pacifichoardings-project-images` run against the account before a
-			// remote deploy; local dev/preview emulate off the name alone.
 			"binding": "PROJECT_IMAGES",
 			"bucket_name": "pacifichoardings-project-images"
 		}
