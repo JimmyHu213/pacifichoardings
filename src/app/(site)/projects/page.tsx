@@ -12,6 +12,10 @@ export const metadata: Metadata = {
 	description: "Class A and Class B hoardings, temporary fencing and graphics wraps we've put up across NSW.",
 };
 
+// getProjects() reads D1 — see the note in (site)/page.tsx for why this has
+// to be explicit.
+export const dynamic = "force-dynamic";
+
 export default async function ProjectsPage() {
 	const [projects, services] = await Promise.all([getProjects(), getServices()]);
 	const serviceTitleBySlug = new Map(services.map((s) => [s.slug, s.title]));

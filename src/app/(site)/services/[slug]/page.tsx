@@ -8,10 +8,11 @@ import ScrollReveal from "@/components/scroll-reveal";
 import { getFaqs, getServices } from "@/lib/content";
 import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
 
-export async function generateStaticParams() {
-	const services = await getServices();
-	return services.map((service) => ({ slug: service.slug }));
-}
+// getFaqs() reads D1 for this page's FAQ subset, so the whole page has to be
+// dynamic (see the note in (site)/page.tsx) — that makes generateStaticParams
+// a no-op, so it's gone rather than left in as dead/misleading config; unknown
+// slugs still 404 via notFound() below, same as before.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
 	const { slug } = await params;

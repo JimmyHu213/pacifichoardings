@@ -11,6 +11,10 @@ export const metadata: Metadata = {
 	description: "AS 4687 certification, council permits, SafeWork NSW compliance and $20M public liability — what's behind every hoarding we put up.",
 };
 
+// getFaqs() reads D1 — see the note in (site)/page.tsx for why this has to
+// be explicit.
+export const dynamic = "force-dynamic";
+
 const asSpecs = [
 	{ label: "Drawings", detail: "General arrangement drawings for the specific site and hoarding type" },
 	{ label: "Load cases", detail: "Wind, live and dead loads calculated for the site's actual conditions" },

@@ -7,6 +7,11 @@ import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/st
 import { getClients, getFaqs, getProjects, getServices, getStats, getTestimonials } from "@/lib/content";
 import type { Project } from "@/lib/content";
 
+// getProjects()/getFaqs() read D1 — a plain data read isn't a signal Next's
+// static analysis reacts to (unlike cookies()/headers()), so without this the
+// page would prerender once at build time and never see new content again.
+export const dynamic = "force-dynamic";
+
 const rise = (delay: string) => `ph-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${delay} both`;
 
 function ClientMarquee({ clients, hidden }: { clients: string[]; hidden?: boolean }) {
