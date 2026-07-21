@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed } from "next/font/google";
-import SiteHeader from "@/components/site-header";
-import { getServices } from "@/lib/content";
 import "./globals.css";
 
 const barlow = Barlow({
@@ -22,22 +20,17 @@ export const metadata: Metadata = {
 		"We design, certify and install site hoardings for builders, developers and government — engineered to AS 4687, approved by council, and standing straight until the day you don't need them.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const services = await getServices();
-
 	return (
 		<html lang="en" data-scroll-behavior="smooth">
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
 			</head>
-			<body className={`${barlow.variable} ${barlowCondensed.variable}`}>
-				<SiteHeader services={services} />
-				{children}
-			</body>
+			<body className={`${barlow.variable} ${barlowCondensed.variable}`}>{children}</body>
 		</html>
 	);
 }

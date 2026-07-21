@@ -1,0 +1,5 @@
+# Copy to .dev.vars and fill in for local development.
+# Production values are set via `wrangler secret put <NAME>`, never committed.
+NEXTJS_ENV=development
+ADMIN_PASSWORD=choose-a-dev-password
+SESSION_SECRET=choose-a-long-random-dev-secret
