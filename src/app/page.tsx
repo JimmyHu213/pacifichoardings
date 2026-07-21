@@ -460,6 +460,10 @@ export default function Home() {
 									+
 								</span>
 								<span>Sheet 01</span>
+								<span aria-hidden="true" style={{ color: "var(--color-accent-300)" }}>
+									+
+								</span>
+								<span>Structural Hoardings</span>
 							</div>
 						</div>
 						<div>
