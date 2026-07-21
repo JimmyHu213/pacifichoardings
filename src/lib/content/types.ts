@@ -37,6 +37,8 @@ export interface Service {
 export interface ProjectImage {
 	placeholder: string;
 	label: string;
+	/** R2 object key served via /media once a real photo is uploaded; null keeps the placeholder. */
+	key: string | null;
 }
 
 export interface Project {

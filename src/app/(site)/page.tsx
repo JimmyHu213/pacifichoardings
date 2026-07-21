@@ -1,6 +1,7 @@
 import QuoteForm from "./quote-form";
 import Corners from "@/components/corners";
 import ImageSlot from "@/components/image-slot";
+import ProjectImage from "@/components/project-image";
 import ScrollReveal from "@/components/scroll-reveal";
 import SiteFooter from "@/components/site-footer";
 import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
@@ -62,7 +63,11 @@ function ProjectRail({ projects, hidden }: { projects: Project[]; hidden?: boole
 			{projects.map((p) => (
 				<figure key={p.id} style={{ margin: 0, flex: "none", width: "clamp(300px, 32vw, 440px)" }}>
 					<div className="blueprint duotone">
-						<ImageSlot placeholder="Drop a project photo" label={hidden ? undefined : "Project photograph"} />
+						{p.image.key ? (
+							<ProjectImage image={hidden ? { ...p.image, label: "" } : p.image} />
+						) : (
+							<ImageSlot placeholder="Drop a project photo" label={hidden ? undefined : "Project photograph"} />
+						)}
 						<Corners />
 					</div>
 					<figcaption

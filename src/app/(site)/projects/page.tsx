@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Corners from "@/components/corners";
-import ImageSlot from "@/components/image-slot";
+import ProjectImage from "@/components/project-image";
 import QuoteCta from "@/components/quote-cta";
 import ScrollReveal from "@/components/scroll-reveal";
 import { getProjects, getServices } from "@/lib/content";
@@ -45,7 +45,7 @@ export default async function ProjectsPage() {
 						{projects.map((project) => (
 							<article key={project.id} className="ph-reveal">
 								<figure className="blueprint duotone" style={{ margin: 0 }}>
-									<ImageSlot placeholder={project.image.placeholder} label={project.image.label} />
+									<ProjectImage image={project.image} />
 									<Corners />
 								</figure>
 								<div style={{ marginTop: 16 }}>

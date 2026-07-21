@@ -36,6 +36,17 @@
 			"migrations_dir": "migrations"
 		}
 	],
+	"r2_buckets": [
+		{
+			// Project gallery photo storage — distinct from the IMAGES binding
+			// above, which is OpenNext's image *optimization* hook, not storage.
+			// The real bucket needs `wrangler r2 bucket create
+			// pacifichoardings-project-images` run against the account before a
+			// remote deploy; local dev/preview emulate off the name alone.
+			"binding": "PROJECT_IMAGES",
+			"bucket_name": "pacifichoardings-project-images"
+		}
+	],
 	"services": [
 		{
 			// Self-reference service binding, the service name must match the worker name

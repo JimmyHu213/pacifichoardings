@@ -10,7 +10,7 @@ import { stats } from "./static/stats";
 import { testimonials } from "./static/testimonials";
 import type { Faq, Project } from "./types";
 
-export type { Stat, Service, Project, Testimonial, Faq } from "./types";
+export type { Stat, Service, Project, ProjectImage, Testimonial, Faq } from "./types";
 
 export async function getClients() {
 	return clients;
@@ -31,6 +31,7 @@ interface ProjectRow {
 	service_slug: string;
 	timeframe: string;
 	description: string;
+	image_key: string | null;
 	image_alt: string | null;
 }
 
@@ -38,7 +39,7 @@ export async function getProjects(): Promise<Project[]> {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
 		const { results } = await env.DB.prepare(
-			"SELECT id, title, detail, service_slug, timeframe, description, image_alt FROM projects ORDER BY sort_order, id",
+			"SELECT id, title, detail, service_slug, timeframe, description, image_key, image_alt FROM projects ORDER BY sort_order, id",
 		).all<ProjectRow>();
 
 		return results.map((row) => ({
@@ -51,6 +52,7 @@ export async function getProjects(): Promise<Project[]> {
 			image: {
 				placeholder: row.image_alt ?? `Drop a photo — ${row.title}`,
 				label: row.image_alt ?? row.title,
+				key: row.image_key,
 			},
 		}));
 	} catch (error) {
