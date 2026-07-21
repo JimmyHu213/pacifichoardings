@@ -269,7 +269,7 @@ export default function Home() {
 				}}
 			>
 				<video
-					src="/hero-crane.mp4"
+					src="/hero.mp4"
 					autoPlay
 					muted
 					loop
