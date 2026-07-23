@@ -64,6 +64,7 @@ For multi-step tasks, state a brief plan with verification at each step.
 
 ## 7. Git Workflow
 
+- **NEVER commit or push directly to `main`.** All changes go through a feature branch and a pull request — this project has a review process (CodeRabbit + human review) that direct pushes bypass. "Deploy" means "merge the PR", not "push main".
 - Conventional Commits required: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`, `ci:`, `build:`, `perf:`, `style:`
 - Keep PRs small and focused — one concern per PR.
 - Write meaningful commit messages explaining why, not what.
