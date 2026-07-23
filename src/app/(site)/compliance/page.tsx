@@ -8,7 +8,7 @@ import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/st
 
 export const metadata: Metadata = {
 	title: "Compliance & Safety — Pacific Hoardings",
-	description: "AS 4687 certification, council permits, SafeWork NSW compliance and $20M public liability — what's behind every hoarding we put up.",
+	description: "Hoardings engineered to AS 4687 and AS/NZS 1170, council permits under the Roads Act, SafeWork NSW compliance and $20M public liability — what's behind every hoarding we put up.",
 };
 
 // getFaqs() reads D1 — see the note in (site)/page.tsx for why this has to
@@ -55,12 +55,13 @@ export default async function CompliancePage() {
 				</section>
 
 				<section style={{ padding: "24px 0 64px" }}>
-					<span style={kicker}>AS 4687 certification</span>
+					<span style={kicker}>Engineered to standard</span>
 					<hr style={kickerRule} />
 					<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "64ch", marginBottom: 32 }}>
-						AS 4687 is the Australian Standard for temporary fencing and hoardings — it sets the engineering benchmark every
-						hoarding on public land has to clear. We don&rsquo;t treat it as a box to tick after the fact: every job is
-						designed to the standard from the first drawing, not retrofitted with paperwork once it&rsquo;s already standing.
+						Class A fencing and hoardings are built to AS 4687, the Australian Standard for temporary fencing and hoardings.
+						Class B overhead decks are a different animal — they&rsquo;re engineered to AS/NZS 1170 load cases under the SafeWork
+						NSW Overhead Protective Structures Code of Practice. Either way, the engineering is done from the first drawing, not
+						retrofitted with paperwork once the structure&rsquo;s already standing.
 					</p>
 					<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "clamp(20px, 3vw, 32px)" }}>
 						{asSpecs.map((spec) => (
@@ -97,11 +98,11 @@ export default async function CompliancePage() {
 						<span style={kicker}>Council permits & traffic control</span>
 						<hr style={kickerRule} />
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							Any hoarding standing on or over public land — a footpath, road reserve or laneway — needs council approval
-							before it goes up. Three approvals usually travel together: the hoarding permit itself, footpath occupation
-							where the hoarding or gantry extends over council land, and a traffic control plan wherever pedestrians or
-							vehicles need to be managed around it. We prepare and lodge all three, and stay the point of contact if council
-							comes back with questions.
+							Any hoarding standing on or over public land — a footpath, road reserve or laneway — needs council consent under
+							section 138 of the Roads Act 1993 before it goes up. Three approvals usually travel together: the hoarding permit
+							itself, footpath occupation where the hoarding or gantry extends over council land, and a traffic control plan
+							wherever pedestrians or vehicles need to be managed around it. We prepare and lodge all three, and stay the point
+							of contact if council comes back with questions.
 						</p>
 					</div>
 					<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
