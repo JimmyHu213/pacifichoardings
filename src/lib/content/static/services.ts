@@ -37,7 +37,7 @@ export const services: Service[] = [
 		overview:
 			"Class B is the engineered gantry deck that goes up when work happens above a footpath you're keeping open — it catches falling material, carries under-awning lighting, and comes with the load documentation your certifier will actually accept. Every deck is drawn to the job's specific loads, not pulled off a generic template.",
 		whenYouNeedIt:
-			"Required wherever work is happening above a public footpath that stays trafficable — demolition above street level, facade work, crane lifts over a live footpath. If pedestrians are walking under the work, council will ask for a Class B deck and the engineering to back it.",
+			"Required wherever work is happening above a public footpath that stays trafficable — demolition above street level, facade work, crane lifts over a live footpath. As a rule of thumb NSW councils trigger a Class B deck once a building adjoining the footpath is 7.5m or taller and sits within 3.5m of the street alignment. If pedestrians are walking under the work, council will ask for a Class B deck and the engineering to back it.",
 		specs: [
 			{ label: "Deck", detail: "Engineered overhead deck rated to the specific load case for your job" },
 			{ label: "Lighting", detail: "Under-awning lighting to the standard required for a trafficable footpath" },
@@ -45,12 +45,12 @@ export const services: Service[] = [
 			{ label: "Certification", detail: "Signed structural documentation your certifier can lodge immediately" },
 		],
 		process: [
-			{ step: "Load case & drawings", detail: "Our engineers assess the works above and draw the deck to suit." },
+			{ step: "Load case & drawings", detail: "Our engineers assess the works above and draw the deck to the AS/NZS 1170 load cases." },
 			{ step: "Council lodgement", detail: "Structural certification and permit lodged before install." },
 			{ step: "Install", detail: "Deck erected and tied in, lighting commissioned before the footpath reopens." },
-			{ step: "Inspection & handover", detail: "Signed off and ready for council or principal contractor sign-off." },
+			{ step: "Inspection & handover", detail: "Signed off and re-certified at six-monthly intervals while it stays up." },
 		],
-		complianceTags: ["AS 4687 certified", "Engineer-signed load case", "SafeWork NSW compliant"],
+		complianceTags: ["AS/NZS 1170 engineered", "Engineer-signed load case", "SafeWork NSW compliant"],
 		images: [
 			{ placeholder: "Drop a photo — Class B gantry over a live footpath", label: "Class B overhead gantry deck" },
 			{ placeholder: "Drop a photo — under-awning lighting detail", label: "Class B under-awning lighting" },
