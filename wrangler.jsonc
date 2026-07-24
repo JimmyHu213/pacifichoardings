@@ -42,11 +42,10 @@
 	],
 	"vars": {
 		// Public Turnstile site key for the admin-login CAPTCHA. Safe to commit
-		// (it ships to the browser anyway). Set this to the real widget's site
-		// key before deploying — while empty, the login challenge can't render
-		// and admin login fails closed. Local dev overrides it via .dev.vars.
-		// The matching TURNSTILE_SECRET_KEY is a secret: `wrangler secret put`.
-		"TURNSTILE_SITE_KEY": ""
+		// (it ships to the browser anyway). Local dev overrides it via .dev.vars
+		// to use the always-pass test key. The matching TURNSTILE_SECRET_KEY is
+		// a secret, set with `wrangler secret put TURNSTILE_SECRET_KEY`.
+		"TURNSTILE_SITE_KEY": "0x4AAAAAAD8Wq_EuR6MYTeYZ"
 	},
 	"services": [
 		{
