@@ -163,8 +163,8 @@ export default async function Home() {
 							animation: rise("0.1s"),
 						}}
 					>
-						<span style={{ display: "block" }}>Hoarding that holds.</span>
-						<span style={{ display: "block", color: "var(--color-accent-300)" }}>Paperwork that passes.</span>
+						<span style={{ display: "block" }}>Welcome to Australia&rsquo;s</span>
+						<span style={{ display: "block", color: "var(--color-accent-300)" }}>top hoarding service</span>
 					</h1>
 					<span
 						style={{
@@ -254,7 +254,7 @@ export default async function Home() {
 				</div>
 			</section>
 
-			<div style={{ maxWidth: 1240, margin: "0 auto", padding: `0 ${pageGutter}` }}>
+			<div className="ph-sheet" style={{ maxWidth: 1240, margin: "0 auto", padding: `0 ${pageGutter}` }}>
 				<section aria-label="Pacific Hoardings — capability data" style={{ padding: "88px 0 72px" }}>
 					<div
 						style={{

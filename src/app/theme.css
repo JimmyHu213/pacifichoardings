@@ -103,7 +103,7 @@ figcaption {
 .btn svg { display: block; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn-primary { background: var(--color-accent); color: var(--color-bg); }
-.btn-primary:hover { background: var(--color-accent-600); }
+.btn-primary:hover { background: var(--color-accent-600); color: var(--color-bg); }
 .btn-primary:active { background: var(--color-accent-700); }
 .btn-secondary { border-color: var(--color-divider); }
 .btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
@@ -201,6 +201,105 @@ html { scroll-behavior: smooth; }
 body { margin: 0; text-wrap: pretty; }
 a { color: var(--color-accent-700); }
 a:hover { color: var(--color-accent); }
+
+/* — drafting-sheet grid behind the content sections below the hero. Lines are
+     drawn as the container's own background (so they sit behind every child),
+     and text inherits a bg-coloured halo that erases the lines where they run
+     under copy — a light fade wherever grid meets text. — */
+.ph-sheet {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  text-shadow: 0 0 6px var(--color-bg), 0 0 6px var(--color-bg), 0 0 3px var(--color-bg);
+}
+/* Filled components sit on their own background — the grid never shows through
+   them, so the halo just blooms around their label. Switch it off. */
+.ph-sheet .btn,
+.ph-sheet .tag {
+  text-shadow: none;
+}
+
+/* — projects page: alternating rows that slide in from left / right over
+     layered backing frames + a ghosted index number (multi-level depth). — */
+.ph-proj-list { display: flex; flex-direction: column; gap: clamp(72px, 10vw, 140px); }
+
+.ph-proj {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  width: min(100%, 1040px);
+}
+.ph-proj-right {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  margin-left: auto;
+}
+.ph-proj-right .ph-proj-media { grid-column: 2; grid-row: 1; }
+.ph-proj-right .ph-proj-body { grid-column: 1; grid-row: 1; }
+
+/* stacked hairline frames behind the image — offset toward the outer edge */
+.ph-proj-media { position: relative; z-index: 0; }
+.ph-proj-media::before,
+.ph-proj-media::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  border: 1px solid var(--color-divider);
+}
+.ph-proj-media::before { transform: translate(16px, 16px); }
+.ph-proj-media::after {
+  transform: translate(32px, 32px);
+  border-color: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.ph-proj-right .ph-proj-media::before { transform: translate(-16px, 16px); }
+.ph-proj-right .ph-proj-media::after { transform: translate(-32px, 32px); }
+
+.ph-proj-index {
+  position: absolute; top: -0.42em; left: 0; z-index: -2;
+  font-family: var(--font-heading); font-weight: 600; line-height: 0.8;
+  font-size: clamp(96px, 15vw, 220px);
+  color: color-mix(in srgb, var(--color-text) 5%, transparent);
+  font-feature-settings: "'tnum' 1";
+  text-shadow: none; pointer-events: none; user-select: none;
+}
+.ph-proj-right .ph-proj-index { left: auto; right: 0; }
+
+/* scroll-linked reveal — each row scrubs in from its side tied to scroll
+   position (not a one-shot trigger), the way Apple's product pages animate.
+   Progressive enhancement: browsers without scroll-driven animations render
+   the rows statically. */
+@keyframes ph-proj-in-l {
+  from { opacity: 0; transform: translate3d(clamp(-140px, -12vw, -64px), 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ph-proj-in-r {
+  from { opacity: 0; transform: translate3d(clamp(64px, 12vw, 140px), 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+@supports (animation-timeline: view()) {
+  .ph-proj {
+    animation-name: ph-proj-in-l;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+  .ph-proj-right { animation-name: ph-proj-in-r; }
+}
+
+@media (max-width: 720px) {
+  .ph-proj, .ph-proj-right { grid-template-columns: 1fr; width: 100%; }
+  .ph-proj-right .ph-proj-media,
+  .ph-proj-right .ph-proj-body { grid-column: 1; }
+  .ph-proj-media::before { transform: translate(10px, 10px); }
+  .ph-proj-media::after { transform: translate(20px, 20px); }
+  .ph-proj-right .ph-proj-media::before { transform: translate(-10px, 10px); }
+  .ph-proj-right .ph-proj-media::after { transform: translate(-20px, 20px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-proj { animation: none; opacity: 1; transform: none; }
+}
 
 /* hover states lifted out of the markup (style-hover in the reference) */
 .ph-nav-link { color: color-mix(in srgb, var(--color-bg) 80%, transparent); }
