@@ -3,3 +3,11 @@
 NEXTJS_ENV=development
 ADMIN_PASSWORD=choose-a-dev-password
 SESSION_SECRET=choose-a-long-random-dev-secret
+
+# Cloudflare Turnstile (admin login CAPTCHA). The values below are Cloudflare's
+# official "always passes" test keys — fine for local dev. TURNSTILE_SITE_KEY is
+# public and also lives in wrangler.jsonc `vars`; overriding it here lets local
+# dev use the test widget. TURNSTILE_SECRET_KEY is a secret (`wrangler secret put`
+# in production). Real keys come from a Turnstile widget in the Cloudflare dashboard.
+TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA

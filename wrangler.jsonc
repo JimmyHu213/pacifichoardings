@@ -40,6 +40,14 @@
 			"bucket_name": "pacifichoardings-project-images"
 		}
 	],
+	"vars": {
+		// Public Turnstile site key for the admin-login CAPTCHA. Safe to commit
+		// (it ships to the browser anyway). Set this to the real widget's site
+		// key before deploying — while empty, the login challenge can't render
+		// and admin login fails closed. Local dev overrides it via .dev.vars.
+		// The matching TURNSTILE_SECRET_KEY is a secret: `wrangler secret put`.
+		"TURNSTILE_SITE_KEY": ""
+	},
 	"services": [
 		{
 			// Self-reference service binding, the service name must match the worker name
