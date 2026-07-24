@@ -40,6 +40,13 @@
 			"bucket_name": "pacifichoardings-project-images"
 		}
 	],
+	"vars": {
+		// Public Turnstile site key for the admin-login CAPTCHA. Safe to commit
+		// (it ships to the browser anyway). Local dev overrides it via .dev.vars
+		// to use the always-pass test key. The matching TURNSTILE_SECRET_KEY is
+		// a secret, set with `wrangler secret put TURNSTILE_SECRET_KEY`.
+		"TURNSTILE_SITE_KEY": "0x4AAAAAAD8Wq_EuR6MYTeYZ"
+	},
 	"services": [
 		{
 			// Self-reference service binding, the service name must match the worker name
