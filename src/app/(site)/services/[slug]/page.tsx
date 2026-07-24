@@ -41,7 +41,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 		<>
 			<ScrollReveal />
 
-			<div style={{ maxWidth: 1240, margin: "0 auto", padding: `0 ${pageGutter}` }}>
+			<div className="ph-sheet" style={{ maxWidth: 1240, margin: "0 auto", padding: `0 ${pageGutter}` }}>
 				<section style={{ padding: "56px 0 48px" }}>
 					<nav
 						aria-label="Breadcrumb"

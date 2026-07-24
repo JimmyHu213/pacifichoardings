@@ -15,7 +15,7 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-	title: "Pacific Hoardings — Hoarding that holds. Paperwork that passes.",
+	title: "Pacific Hoardings — Australia's top hoarding service",
 	description:
 		"We design, certify and install site hoardings for builders, developers and government — engineered to AS 4687, approved by council, and standing straight until the day you don't need them.",
 };

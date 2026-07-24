@@ -18,7 +18,7 @@ export default async function AboutPage() {
 		<>
 			<ScrollReveal />
 
-			<div style={{ maxWidth: 1240, margin: "0 auto", padding: `0 ${pageGutter}` }}>
+			<div className="ph-sheet" style={{ maxWidth: 1240, margin: "0 auto", padding: `0 ${pageGutter}` }}>
 				<section style={{ padding: "56px 0 48px" }}>
 					<span style={kicker}>About</span>
 					<hr style={kickerRule} />
