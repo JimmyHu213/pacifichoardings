@@ -15,6 +15,19 @@
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
+	"routes": [
+		// Custom domains — deploying creates the proxied DNS records and the
+		// edge certificate for each hostname, so the zone needs no manual DNS.
+		// see https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+		{
+			"pattern": "pacifichoardings.com.au",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.pacifichoardings.com.au",
+			"custom_domain": true
+		}
+	],
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".open-next/assets"
