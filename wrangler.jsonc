@@ -15,6 +15,10 @@
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
+	// Declaring "routes" turns both of these off by default, which takes away
+	// the workers.dev URL and the per-version preview links. Keep them on.
+	"workers_dev": true,
+	"preview_urls": true,
 	"routes": [
 		// Custom domains — deploying creates the proxied DNS records and the
 		// edge certificate for each hostname, so the zone needs no manual DNS.
