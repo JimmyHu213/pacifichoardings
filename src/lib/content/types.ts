@@ -39,6 +39,9 @@ export interface ProjectImage {
 	label: string;
 	/** R2 object key served via /media once a real photo is uploaded; null keeps the placeholder. */
 	key: string | null;
+	/** Real pixel size, so the photo can render at its own aspect ratio. Null falls back to 4:3. */
+	width: number | null;
+	height: number | null;
 }
 
 export interface Project {

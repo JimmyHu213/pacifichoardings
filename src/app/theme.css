@@ -52,6 +52,15 @@ body {
 .duotone::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: var(--color-accent); mix-blend-mode: color;
+  transition: opacity 0.45s ease;
+}
+/* The blue grade is the house treatment, but it flattens the printed graphics
+   wraps — whose whole selling point is colour. Hovering the frame lifts it so
+   the photo shows true, and the technical look still governs at rest. */
+.ph-proj-media:hover .duotone::after { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .duotone::after { transition: none; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
