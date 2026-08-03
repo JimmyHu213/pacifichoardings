@@ -1,3 +1,4 @@
+import Image from "next/image";
 import QuoteForm from "./quote-form";
 import Corners from "@/components/corners";
 import ImageSlot from "@/components/image-slot";
@@ -64,7 +65,7 @@ function ProjectRail({ projects, hidden }: { projects: Project[]; hidden?: boole
 				<figure key={p.id} style={{ margin: 0, flex: "none", width: "clamp(300px, 32vw, 440px)" }}>
 					<div className="blueprint duotone">
 						{p.image.key ? (
-							<ProjectImage image={hidden ? { ...p.image, label: "" } : p.image} />
+							<ProjectImage image={hidden ? { ...p.image, label: "" } : p.image} variant="rail" />
 						) : (
 							<ImageSlot placeholder="Drop a project photo" label={hidden ? undefined : "Project photograph"} />
 						)}
@@ -416,7 +417,14 @@ export default async function Home() {
 					}}
 				>
 					<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-						<ImageSlot placeholder="Drop a site photo — hoarding in place" label="Site photograph" />
+						<Image
+							src="/site-hoarding.jpg"
+							alt="Clad hoarding screen cantilevered over a public footpath"
+							width={1200}
+							height={1600}
+							sizes="(max-width: 720px) 100vw, 560px"
+							style={{ width: "100%", height: "auto", display: "block" }}
+						/>
 						<Corners />
 					</figure>
 					<div>

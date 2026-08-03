@@ -33,13 +33,15 @@ interface ProjectRow {
 	description: string;
 	image_key: string | null;
 	image_alt: string | null;
+	image_width: number | null;
+	image_height: number | null;
 }
 
 export async function getProjects(): Promise<Project[]> {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
 		const { results } = await env.DB.prepare(
-			"SELECT id, title, detail, service_slug, timeframe, description, image_key, image_alt FROM projects ORDER BY sort_order, id",
+			"SELECT id, title, detail, service_slug, timeframe, description, image_key, image_alt, image_width, image_height FROM projects ORDER BY sort_order, id",
 		).all<ProjectRow>();
 
 		return results.map((row) => ({
@@ -53,6 +55,8 @@ export async function getProjects(): Promise<Project[]> {
 				placeholder: row.image_alt ?? `Drop a photo — ${row.title}`,
 				label: row.image_alt ?? row.title,
 				key: row.image_key,
+				width: row.image_width,
+				height: row.image_height,
 			},
 		}));
 	} catch (error) {
