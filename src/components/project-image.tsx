@@ -34,6 +34,12 @@ export default function ProjectImage({
 			width={image.width ?? FALLBACK_WIDTH}
 			height={image.height ?? FALLBACK_HEIGHT}
 			sizes={variant === "rail" ? "440px" : "(max-width: 720px) 100vw, 560px"}
+			// The Cloudflare image optimizer resolves a root-relative url= against
+			// the ASSETS binding, so it can only see files built into /public.
+			// /media is a Worker route reading R2 — the optimizer finds nothing
+			// there and fails the request ("upstream response is invalid"). These
+			// objects are already resized and served immutable, so serve direct.
+			unoptimized
 			style={
 				variant === "rail" || !hasSize
 					? { width: "100%", height: "auto", aspectRatio: "4 / 3", objectFit: "cover", display: "block" }
