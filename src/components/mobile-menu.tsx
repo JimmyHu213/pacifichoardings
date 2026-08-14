@@ -58,8 +58,8 @@ export default function MobileMenu({
 						{link.label}
 					</Link>
 				))}
-				<a href="tel:1300000000" className="mobile-menu-link" onClick={() => setOpen(false)}>
-					1300 000 000
+				<a href="tel:0240545107" className="mobile-menu-link" onClick={() => setOpen(false)}>
+					02 4054 5107
 				</a>
 				<Link href={quoteHref} className="mobile-menu-cta" onClick={() => setOpen(false)}>
 					Request a quote

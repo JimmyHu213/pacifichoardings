@@ -26,8 +26,6 @@ export type QuoteFormState =
 const QUOTE_TYPES = [
 	"Class A hoarding",
 	"Class B hoarding (gantry)",
-	"Temporary fencing",
-	"Signage / graphics wrap",
 	"Design & certification only",
 	"Not sure yet — advise me",
 ];

@@ -14,8 +14,8 @@ export default function SiteFooter() {
 				justifyContent: "space-between",
 			}}
 		>
-			<span>Pacific Hoardings Pty Ltd · ABN 00 000 000 000</span>
-			<span>NSW-based · Servicing Australia-wide</span>
+			<span>Pacific Hoarding Pty Ltd · ABN 96 686 186 934</span>
+			<span>Morisset, NSW · Servicing Sydney &amp; the Central Coast</span>
 		</footer>
 	);
 }

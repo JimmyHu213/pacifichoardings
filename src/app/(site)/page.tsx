@@ -180,7 +180,7 @@ export default async function Home() {
 							animation: rise("0.3s"),
 						}}
 					>
-						Class A + B hoardings · NSW · Australia-wide
+						Class A + B hoardings · Sydney &amp; the Central Coast
 					</span>
 				</div>
 				<a
@@ -283,8 +283,7 @@ export default async function Home() {
 								<br />— capability data
 							</h2>
 							<p style={{ ...bodyCopy, margin: "20px 0 0", maxWidth: "42ch" }}>
-								The numbers we&rsquo;re held to on every job. Values hold for metropolitan NSW; regional and interstate programs
-								quoted to schedule.
+								The numbers we&rsquo;re held to on every job across Sydney and the Central Coast.
 							</p>
 							<div
 								style={{
@@ -582,24 +581,27 @@ export default async function Home() {
 								maxWidth: "48ch",
 							}}
 						>
-							Tell us where the site is and what&rsquo;s going up. We&rsquo;ll walk it, measure it and have an itemised price back
-							within 24 hours. No lump sums, no surprises at variation time.
+							Tell us where the site is and what&rsquo;s going up. We&rsquo;ll walk it, measure it and come back with an
+							itemised price. No lump sums, no surprises at variation time.
 						</p>
 						<div style={{ marginTop: 32, fontSize: 15, lineHeight: "28px" }}>
 							<div>
 								<strong style={{ fontWeight: 600 }}>Phone</strong> —{" "}
-								<a href="tel:1300000000" style={{ color: "var(--color-accent-300)" }}>
-									1300 000 000
+								<a href="tel:0240545107" style={{ color: "var(--color-accent-300)" }}>
+									02 4054 5107
 								</a>
 							</div>
 							<div>
 								<strong style={{ fontWeight: 600 }}>Email</strong> —{" "}
-								<a href="mailto:quotes@pacifichoardings.com.au" style={{ color: "var(--color-accent-300)" }}>
-									quotes@pacifichoardings.com.au
+								<a href="mailto:admin@pacificgrp.com.au" style={{ color: "var(--color-accent-300)" }}>
+									admin@pacificgrp.com.au
 								</a>
 							</div>
 							<div>
-								<strong style={{ fontWeight: 600 }}>Yard</strong> — 12 Placeholder Road, Wetherill Park NSW 2164
+								<strong style={{ fontWeight: 600 }}>Yard</strong> — Morisset, NSW
+							</div>
+							<div>
+								<strong style={{ fontWeight: 600 }}>Hours</strong> — 8am–4pm
 							</div>
 						</div>
 					</div>

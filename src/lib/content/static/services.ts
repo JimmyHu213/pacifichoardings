@@ -58,62 +58,6 @@ export const services: Service[] = [
 		faqIds: ["class-a-vs-class-b", "certification", "install-speed"],
 	},
 	{
-		slug: "temporary-fencing",
-		title: "Temporary fencing",
-		body: "Chain-mesh panels, braced, counterweighted and stood the same day. For the stages before the hoarding goes up and after it comes down.",
-		tagline: "Chain-mesh that's braced and standing before lunch.",
-		overview:
-			"Temporary fencing is the chain-mesh panel system we stand for the stages a full hoarding doesn't suit — site establishment before the hoarding goes up, or the wind-down once it comes off. Braced, counterweighted and stood the same day, it's rated for wind and secure enough to hold a site overnight.",
-		whenYouNeedIt:
-			"Use it for early works and site establishment, short-duration jobs where a built hoarding isn't justified, or as the interim boundary while your Class A or Class B permit is still moving through council.",
-		specs: [
-			{ label: "Panels", detail: "Standard 2.1m x 2.4m chain-mesh, hot-dip galvanised" },
-			{ label: "Bracing", detail: "Counterweighted feet rated to the site wind zone" },
-			{ label: "Access", detail: "Swing or sliding gate panels wherever the site needs them" },
-			{ label: "Options", detail: "Shade cloth, privacy screen or anti-climb infill on request" },
-		],
-		process: [
-			{ step: "Site walk", detail: "We measure the boundary and confirm ground conditions." },
-			{ step: "Delivery", detail: "Panels delivered and staged the same or next business day." },
-			{ step: "Install", detail: "Braced and locked off — usually done within a single visit." },
-			{ step: "Strike", detail: "Pulled down and removed the day the site no longer needs it." },
-		],
-		complianceTags: ["SafeWork NSW compliant", "Licensed installers"],
-		images: [
-			{ placeholder: "Drop a photo — temporary fencing around a site perimeter", label: "Temporary chain-mesh fencing" },
-			{ placeholder: "Drop a photo — braced fencing detail", label: "Temporary fencing bracing detail" },
-		],
-		faqIds: ["install-speed", "council-approval"],
-	},
-	{
-		slug: "signage-graphics-wraps",
-		title: "Signage & graphics wraps",
-		body: "Full-print wraps, project signage and anti-graffiti laminate. The safest wall on the street may as well sell the building behind it.",
-		tagline: "The safest wall on the street, doing double duty as a billboard.",
-		overview:
-			"Full-print graphics wraps turn your hoarding into project signage — render imagery, sponsor logos or straight branding, printed and laminated to survive eighteen months of weather and foot traffic. Anti-graffiti laminate and statutory signage go on every wrap as standard, not as an upsell.",
-		whenYouNeedIt:
-			"Any hoarding facing a street, laneway or public plaza is free marketing space — developers and builders use it for render imagery and leasing signage, retail fit-outs use it to keep the shopfront looking finished during works, and every site needs the statutory safety and contact signage regardless.",
-		specs: [
-			{ label: "Print", detail: "Full-colour UV-cured print, panel or full-length wrap" },
-			{ label: "Laminate", detail: "Anti-graffiti laminate on every wrap as standard" },
-			{ label: "Artwork", detail: "Supply your own or have our studio lay it out to the panel dimensions" },
-			{ label: "Signage", detail: "Statutory site signage included — hazard, contact and permit signage" },
-		],
-		process: [
-			{ step: "Artwork", detail: "You supply artwork or brief our studio on what the wrap needs to say." },
-			{ step: "Proof", detail: "Panel-by-panel proof signed off before anything goes to print." },
-			{ step: "Print & laminate", detail: "Printed, laminated and cut to the exact hoarding panel sizes." },
-			{ step: "Install", detail: "Applied on site, flush and bubble-free, ready for the street to see." },
-		],
-		complianceTags: ["Anti-graffiti laminate", "Statutory signage included"],
-		images: [
-			{ placeholder: "Drop a photo — full graphics wrap on a hoarding", label: "Hoarding graphics wrap installed" },
-			{ placeholder: "Drop a photo — signage detail close-up", label: "Signage and laminate detail" },
-		],
-		faqIds: ["branding-print"],
-	},
-	{
 		slug: "design-certification",
 		title: "Design & certification",
 		body: "Every hoarding drawn and signed to AS 4687 by our engineers. Load cases, tie-downs and documentation your certifier accepts the first time.",

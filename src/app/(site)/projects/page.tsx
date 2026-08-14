@@ -9,7 +9,7 @@ import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/st
 
 export const metadata: Metadata = {
 	title: "Projects — Pacific Hoardings",
-	description: "Class A and Class B hoardings, temporary fencing and graphics wraps we've put up across NSW.",
+	description: "Class A and Class B hoardings we've put up across Sydney and the Central Coast.",
 };
 
 // getProjects() reads D1 — see the note in (site)/page.tsx for why this has
