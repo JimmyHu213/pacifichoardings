@@ -154,13 +154,12 @@ export default async function AboutPage() {
 						}}
 					>
 						<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-							<ImageSlot placeholder="Drop a photo — the yard, Wetherill Park" label="Pacific Hoardings yard, Wetherill Park" />
+							<ImageSlot placeholder="Drop a photo — the yard, Morisset" label="Pacific Hoardings yard, Morisset" />
 							<Corners />
 						</figure>
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							Every panel, gantry and fence line goes out of the same Wetherill Park yard, measured and staged against the
-							site plan before the truck leaves. It&rsquo;s also where the wrap gets printed and the paperwork gets filed —
-							one address for the whole job.
+							Every panel and gantry goes out of the same Morisset yard, measured and staged against the site plan before
+							the truck leaves. It&rsquo;s also where the paperwork gets filed — one address for the whole job.
 						</p>
 					</div>
 				</section>

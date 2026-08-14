@@ -7,7 +7,7 @@ test.describe('desktop services dropdown', () => {
 
     const panel = page.locator('.nav-desktop .nav-dropdown-panel');
     await expect(panel).toBeVisible();
-    await expect(panel.getByRole('link')).toHaveCount(6);
+    await expect(panel.getByRole('link')).toHaveCount(4);
 
     await panel.getByRole('link', { name: 'Class A hoarding' }).click();
     await expect(page).toHaveURL(/\/services\/class-a-hoarding$/);
@@ -51,7 +51,7 @@ test.describe('mobile menu', () => {
     await expect(panel).toBeVisible();
 
     await panel.locator('.nav-dropdown-trigger').click();
-    await expect(panel.getByRole('link', { name: 'Temporary fencing' })).toBeVisible();
+    await expect(panel.getByRole('link', { name: 'Class B hoarding' })).toBeVisible();
   });
 });
 

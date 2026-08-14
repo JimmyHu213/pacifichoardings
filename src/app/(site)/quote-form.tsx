@@ -16,10 +16,10 @@ export default function QuoteForm() {
 					Received — we&rsquo;re on it
 				</h3>
 				<p style={{ fontSize: 15, lineHeight: "24px", margin: "12px 0 0", color: "color-mix(in srgb, var(--color-text) 78%, transparent)" }}>
-					One of our estimators will call you to book the site walk. Expect your itemised quote within 24 hours of the visit.
+					One of our estimators will call you to book the site walk, and your itemised quote will follow the visit.
 				</p>
 				<p style={{ fontSize: 13, lineHeight: "24px", margin: "16px 0 0", color: "color-mix(in srgb, var(--color-text) 70%, transparent)" }}>
-					In a hurry? Call <a href="tel:1300000000">1300 000 000</a> now.
+					In a hurry? Call <a href="tel:0240545107">02 4054 5107</a> now.
 				</p>
 			</div>
 		);
@@ -76,8 +76,6 @@ export default function QuoteForm() {
 				<select className="input" id="q-type" name="type" defaultValue={values?.type}>
 					<option>Class A hoarding</option>
 					<option>Class B hoarding (gantry)</option>
-					<option>Temporary fencing</option>
-					<option>Signage / graphics wrap</option>
 					<option>Design &amp; certification only</option>
 					<option>Not sure yet — advise me</option>
 				</select>

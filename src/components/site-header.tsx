@@ -66,10 +66,10 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 					</Link>
 				))}
 				<a
-					href="tel:1300000000"
+					href="tel:0240545107"
 					style={{ whiteSpace: "nowrap", color: isOverlay ? "var(--color-bg)" : "var(--color-text)", fontFeatureSettings: "'tnum' 1", fontWeight: 600 }}
 				>
-					1300 000 000
+					02 4054 5107
 				</a>
 				<Link
 					href={anchor("quote")}
