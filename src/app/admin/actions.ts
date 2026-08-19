@@ -12,6 +12,18 @@ export type OtpVerifyState = { status: "idle" } | { status: "error"; message: st
 
 const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
+// Every requestOtpAction outcome is padded to this floor so response timing
+// doesn't hint at whether the address matched, a code was actually sent, or
+// the resend cooldown suppressed it.
+const OTP_REQUEST_MIN_MS = 1000;
+
+async function padOtpResponse(startedAt: number): Promise<void> {
+	const elapsed = Date.now() - startedAt;
+	if (elapsed < OTP_REQUEST_MIN_MS) {
+		await new Promise((resolve) => setTimeout(resolve, OTP_REQUEST_MIN_MS - elapsed));
+	}
+}
+
 // Validate the Turnstile token with Cloudflare's siteverify endpoint. Returns
 // false on any failure — a missing token, a rejected token, or a non-200
 // response — so the caller fails closed.
@@ -80,6 +92,8 @@ export async function loginAction(_prevState: LoginState, formData: FormData): P
 }
 
 export async function requestOtpAction(_prevState: OtpRequestState, formData: FormData): Promise<OtpRequestState> {
+	const startedAt = Date.now();
+
 	const email = formData.get("email");
 	if (typeof email !== "string" || !email.trim()) {
 		return { status: "error", message: "Enter your email address." };
@@ -108,6 +122,7 @@ export async function requestOtpAction(_prevState: OtpRequestState, formData: Fo
 	// Any address that isn't the admin's gets the same "sent" response as a
 	// real send, so this page never confirms which email is the admin one.
 	if (!constantTimeEqual(email.trim().toLowerCase(), adminEmail.toLowerCase())) {
+		await padOtpResponse(startedAt);
 		return { status: "sent" };
 	}
 
@@ -122,6 +137,7 @@ export async function requestOtpAction(_prevState: OtpRequestState, formData: Fo
 			.bind(now - OTP_RESEND_COOLDOWN_MS)
 			.first();
 		if (recent) {
+			await padOtpResponse(startedAt);
 			return { status: "sent" };
 		}
 
@@ -138,9 +154,11 @@ export async function requestOtpAction(_prevState: OtpRequestState, formData: Fo
 		});
 	} catch (error) {
 		console.error("OTP request failed", error);
+		await padOtpResponse(startedAt);
 		return { status: "error", message: "Couldn't send the code — please try again." };
 	}
 
+	await padOtpResponse(startedAt);
 	return { status: "sent" };
 }
 
@@ -162,17 +180,23 @@ export async function verifyOtpAction(_prevState: OtpVerifyState, formData: Form
 	let valid = false;
 	try {
 		const row = await env.DB.prepare(
-			"SELECT id, code_hash, attempts FROM admin_otp_codes WHERE consumed_at IS NULL AND expires_at > ?1 ORDER BY created_at DESC LIMIT 1",
+			"SELECT id, code_hash FROM admin_otp_codes WHERE consumed_at IS NULL AND expires_at > ?1 ORDER BY created_at DESC LIMIT 1",
 		)
 			.bind(now)
-			.first<{ id: number; code_hash: string; attempts: number }>();
-		if (!row || row.attempts >= OTP_MAX_ATTEMPTS) {
+			.first<{ id: number; code_hash: string }>();
+		if (!row) {
 			return { status: "error", message: "That code is no longer valid — request a new one." };
 		}
 
-		// Burn the attempt before comparing, so a crash mid-check can't hand
-		// out free retries.
-		await env.DB.prepare("UPDATE admin_otp_codes SET attempts = attempts + 1 WHERE id = ?1").bind(row.id).run();
+		// Burn the attempt atomically: the WHERE clause enforces the cap even when
+		// requests race, so concurrent guesses can't stretch the 5-attempt budget,
+		// and a crash mid-check still can't grant free retries.
+		const burn = await env.DB.prepare("UPDATE admin_otp_codes SET attempts = attempts + 1 WHERE id = ?1 AND attempts < ?2")
+			.bind(row.id, OTP_MAX_ATTEMPTS)
+			.run();
+		if (!burn.meta.changes) {
+			return { status: "error", message: "That code is no longer valid — request a new one." };
+		}
 
 		valid = constantTimeEqual(await hashOtpCode(code), row.code_hash);
 		if (valid) {
