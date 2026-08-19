@@ -30,7 +30,7 @@ sending isn't available).
 
 | Decision | Choice |
 | --- | --- |
-| Email delivery | Cloudflare Email Routing `send_email` Worker binding (free, no third-party account). Restriction "verified destinations only" is acceptable: the sole recipient is the fixed admin address. |
+| Email delivery | Cloudflare Email Service (Email Sending) `send_email` Worker binding — native, no third-party account or API key. The sender domain `pacifichoardings.com.au` is onboarded once (auto SPF/DKIM, the zone is already on Cloudflare); no recipient verification is required, so there is no client-side setup dependency. The binding is restricted with `allowed_destination_addresses` to the single admin address. |
 | Login UI | Email-first two-step OTP flow; existing password form hidden behind a small "Developer login" toggle. |
 | Code format | 6 digits, valid 10 minutes, max 5 verify attempts, 60 s resend cooldown. |
 | Session | Unchanged — same 12 h signed cookie for both login paths. |
@@ -39,14 +39,14 @@ sending isn't available).
 
 ### 1. Email infrastructure (one-time, outside code)
 
-- Enable **Email Routing** on the `pacifichoardings.com.au` zone (Cloudflare
-  adds MX/SPF records automatically; no effect on the website).
-- Verify `admin@pacificgrp.com.au` as a **destination address** — someone with
-  that inbox clicks one confirmation email. Production OTP delivery does not
-  work until this is done; the developer password path is unaffected.
+- Onboard `pacifichoardings.com.au` to **Email Sending**
+  (`npx wrangler email sending enable pacifichoardings.com.au`). Cloudflare
+  adds the SPF/DKIM DNS records automatically since the zone is already on
+  Cloudflare; no effect on the website and nothing for the client to confirm.
 - `wrangler.jsonc`: add a `send_email` binding with
-  `destination_address: "admin@pacificgrp.com.au"` so the Worker physically
-  cannot email any other address. Sender: `no-reply@pacifichoardings.com.au`.
+  `allowed_destination_addresses: ["admin@pacificgrp.com.au"]` so the Worker
+  physically cannot email any other address. Sender:
+  `no-reply@pacifichoardings.com.au`.
 - New var `ADMIN_EMAIL = "admin@pacificgrp.com.au"` (not a secret).
 
 ### 2. Data — one D1 migration
@@ -79,8 +79,9 @@ OTP request — no cron needed.
   3. Cooldown: if a non-consumed code was created less than 60 s ago, return
      the generic success message without sending a new one.
   4. Generate a 6-digit code with `crypto.getRandomValues`, store its SHA-256
-     hash with a 10-minute expiry, send the plaintext code via the
-     `send_email` binding (plain-text MIME message).
+     hash with a 10-minute expiry, send the plaintext code via the binding's
+     plain-object API (`env.OTP_EMAIL.send({ to, from, subject, text })` — no
+     MIME construction or `cloudflare:email` import needed).
 - **`verifyOtpAction(code)`**
   1. Load the newest non-consumed, non-expired code row.
   2. Reject if `attempts >= 5`; otherwise increment `attempts` first, then do a
@@ -115,15 +116,16 @@ dev-mode OTP backdoor.
 - **Unit tests** for the OTP helper module (code generation shape, hashing,
   expiry logic, attempt-limit logic), in the same style as existing tests.
 - **Manual verification:** developer password path locally; full OTP path on a
-  preview deployment once the destination address is verified (requires inbox
-  access for `admin@pacificgrp.com.au`).
+  preview deployment once the sender domain is onboarded to Email Sending
+  (confirming receipt requires someone with the `admin@pacificgrp.com.au`
+  inbox).
 
 ## Delivery
 
 - One focused PR from `feat/admin-otp-login` into `main`, through the normal
   CodeRabbit + human review flow.
-- External dependency flagged in the PR: destination-address verification must
-  be completed by the client before the OTP path works in production.
+- Deploy-time steps flagged in the PR: onboard `pacifichoardings.com.au` to
+  Email Sending and apply the D1 migration to the remote database.
 
 ## Out of scope
 
