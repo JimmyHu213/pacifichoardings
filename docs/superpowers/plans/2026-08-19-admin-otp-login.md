@@ -144,7 +144,7 @@ export async function hashOtpCode(code: string): Promise<string> {
 - [ ] **Step 5: Run tests to verify they pass**
 
 Run: `npm run test:unit`
-Expected: PASS (6 tests).
+Expected: PASS (5 tests).
 
 - [ ] **Step 6: Lint and commit**
 
@@ -756,14 +756,16 @@ Wait for CI (lint, PR title, commitlint) and respond to CodeRabbit findings — 
 
 ---
 
-## Deploy steps (after merge — do NOT run before the PR lands)
+## Deploy steps
 
 These need Cloudflare account access and are listed in the PR body:
 
-1. Onboard the sender domain (one-time):
+1. Onboard the sender domain (one-time) — run this BEFORE merging the PR:
+   merging auto-deploys the new `send_email` binding, so onboarding must
+   already be done.
    `npx wrangler email sending enable pacifichoardings.com.au`
    then confirm DNS: `npx wrangler email sending dns get pacifichoardings.com.au`
-2. Apply the migration to production D1 (one-time):
+2. Apply the migration to production D1 (one-time, after merge):
    `npx wrangler d1 migrations apply pacifichoardings-db --remote`
 3. Deploy happens via the normal merge-to-main pipeline.
 4. Smoke-test production: request a code with `admin@pacificgrp.com.au` at

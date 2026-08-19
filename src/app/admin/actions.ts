@@ -142,16 +142,23 @@ export async function requestOtpAction(_prevState: OtpRequestState, formData: Fo
 		}
 
 		const code = generateOtpCode();
-		await env.DB.prepare("INSERT INTO admin_otp_codes (code_hash, expires_at, created_at) VALUES (?1, ?2, ?3)")
+		const insert = await env.DB.prepare("INSERT INTO admin_otp_codes (code_hash, expires_at, created_at) VALUES (?1, ?2, ?3)")
 			.bind(await hashOtpCode(code), now + OTP_TTL_MS, now)
 			.run();
 
-		await otpEmail.send({
-			to: adminEmail,
-			from: { email: "no-reply@pacifichoardings.com.au", name: "Pacific Hoardings" },
-			subject: `${code} is your Pacific Hoardings admin code`,
-			text: `Your Pacific Hoardings admin login code is ${code}.\n\nIt expires in 10 minutes. If you didn't request it, you can ignore this email.`,
-		});
+		try {
+			await otpEmail.send({
+				to: adminEmail,
+				from: { email: "no-reply@pacifichoardings.com.au", name: "Pacific Hoardings" },
+				subject: `${code} is your Pacific Hoardings admin code`,
+				text: `Your Pacific Hoardings admin login code is ${code}.\n\nIt expires in 10 minutes. If you didn't request it, you can ignore this email.`,
+			});
+		} catch (error) {
+			// A code the admin never received must not block the resend cooldown
+			// or shadow an older deliverable code — drop it before failing.
+			await env.DB.prepare("DELETE FROM admin_otp_codes WHERE id = ?1").bind(insert.meta.last_row_id).run();
+			throw error;
+		}
 	} catch (error) {
 		console.error("OTP request failed", error);
 		await padOtpResponse(startedAt);

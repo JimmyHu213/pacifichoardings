@@ -114,7 +114,10 @@ dev-mode OTP backdoor.
 ## Testing
 
 - **Unit tests** for the OTP helper module (code generation shape, hashing,
-  expiry logic, attempt-limit logic), in the same style as existing tests.
+  and the spec constants), in the same style as existing tests. Expiry and
+  attempt-limit enforcement lives in D1 SQL inside the server actions, not
+  in the helper module — it's exercised by the production smoke test
+  instead.
 - **Manual verification:** developer password path locally; full OTP path on a
   preview deployment once the sender domain is onboarded to Email Sending
   (confirming receipt requires someone with the `admin@pacificgrp.com.au`
