@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint src/",
     "test": "playwright test",
+    "test:unit": "vitest run",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
@@ -32,6 +33,7 @@
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
     "typescript": "^5.7.4",
+    "vitest": "^4.1.11",
     "wrangler": "^4.112.0"
   }
 }
