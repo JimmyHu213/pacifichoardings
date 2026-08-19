@@ -12,6 +12,10 @@ declare global {
 		SESSION_SECRET?: string;
 		TURNSTILE_SITE_KEY?: string;
 		TURNSTILE_SECRET_KEY?: string;
+		ADMIN_EMAIL?: string;
+		// send_email binding for OTP delivery (SendEmail comes from the generated
+		// cloudflare-env.d.ts runtime types).
+		OTP_EMAIL?: SendEmail;
 	}
 }
 

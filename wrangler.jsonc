@@ -57,12 +57,25 @@
 			"bucket_name": "pacifichoardings-project-images"
 		}
 	],
+	"send_email": [
+		{
+			// OTP delivery for the admin email login. Restricted so the Worker can
+			// only ever email the single admin address, even if compromised. The
+			// sender domain must be onboarded to Email Sending (see the design
+			// spec's deploy steps).
+			"name": "OTP_EMAIL",
+			"allowed_destination_addresses": ["admin@pacificgrp.com.au"]
+		}
+	],
 	"vars": {
 		// Public Turnstile site key for the admin-login CAPTCHA. Safe to commit
 		// (it ships to the browser anyway). Local dev overrides it via .dev.vars
 		// to use the always-pass test key. The matching TURNSTILE_SECRET_KEY is
 		// a secret, set with `wrangler secret put TURNSTILE_SECRET_KEY`.
-		"TURNSTILE_SITE_KEY": "0x4AAAAAAD8Wq_EuR6MYTeYZ"
+		"TURNSTILE_SITE_KEY": "0x4AAAAAAD8Wq_EuR6MYTeYZ",
+		// The only email allowed to log in via OTP, and the recipient of the codes.
+		// Public knowledge (it's the company contact address), not a secret.
+		"ADMIN_EMAIL": "admin@pacificgrp.com.au"
 	},
 	"services": [
 		{
