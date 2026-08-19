@@ -70,6 +70,7 @@ export default function AdminNav({ groups, children }: { groups: AdminNavGroup[]
 									key={item.href}
 									href={item.href}
 									className={`admin-nav-link${isActive(item.href) ? " is-active" : ""}`}
+									onClick={() => setOpen(false)}
 								>
 									{item.label}
 								</Link>

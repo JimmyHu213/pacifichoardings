@@ -143,7 +143,7 @@ All editable content on `/compliance` moves into `site_settings` under a
 
 | PR | Content | Plan |
 |---|---|---|
-| PR 0 | Left-sidebar admin layout + View site link | to be written (next) |
+| PR 0 | Left-sidebar admin layout + View site link | `2026-08-19-admin-left-nav.md` (exists) |
 | PR 1 | Company info, about page, lists | to be written when reached |
 | PR 2 | Project photo galleries + detail pages | `2026-08-14-project-photo-galleries.md` (exists) |
 | PR 3 | Services editing | to be written when reached |

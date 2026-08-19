@@ -6,11 +6,11 @@
 
 **Architecture:** A `project_images` table replaces the single `image_*` columns on `projects` (data migrated, columns dropped). The content layer returns `cover` + `images[]` per project and gains `getProject(slug)`. The admin project form handles metadata only; photos are managed by per-photo server-action forms on the edit page. Public cards link to a new dynamic detail route.
 
-**Tech Stack:** Next.js 15 App Router on Cloudflare (OpenNext), D1 (SQLite), R2, React server actions, Playwright.
+**Tech Stack:** Next.js 16 App Router on Cloudflare (OpenNext), D1 (SQLite), R2, React server actions, Playwright.
 
 ## Global Constraints
 
-- **Never commit or push to `main`.** All work happens on branch `feat/admin-cms` (already created, carries the spec); PR into `main` when done.
+- **Never commit or push to `main`.** All work happens on branch `feat/admin-cms`; when this plan is executed, the branch will be created fresh off `main` (galleries are PR 2 in the reordered delivery). PR into `main` when done.
 - Conventional Commits (`feat:`, `fix:`, `test:`, `docs:`, …).
 - Tabs for indentation in `src/` (match existing files); 2-space in `tests/` (match existing specs).
 - Image upload rules (copy exactly from existing code): allowlist `image/jpeg, image/png, image/webp, image/avif, image/gif`; max `5 * 1024 * 1024` bytes; never orphan an R2 object on a failed write; old objects deleted only after D1 commits.
