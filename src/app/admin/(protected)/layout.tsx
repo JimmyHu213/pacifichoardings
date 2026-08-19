@@ -1,16 +1,29 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SESSION_COOKIE_NAME, verifySessionCookieValue } from "@/lib/admin-session";
 import { logoutAction } from "../actions";
-import { pageGutter } from "@/lib/style-tokens";
+import AdminNav, { type AdminNavGroup } from "./admin-nav";
 
 export const metadata: Metadata = {
 	title: "Pacific Hoardings — Admin",
 	robots: { index: false, follow: false },
 };
+
+// The nav model lives here (server side) so future CMS sections are added in
+// one place; AdminNav only renders it.
+const NAV_GROUPS: AdminNavGroup[] = [
+	{ label: null, items: [{ href: "/admin", label: "Dashboard" }] },
+	{ label: "Inbox", items: [{ href: "/admin/quotes", label: "Quotes" }] },
+	{
+		label: "Content",
+		items: [
+			{ href: "/admin/projects", label: "Projects" },
+			{ href: "/admin/faqs", label: "FAQs" },
+		],
+	},
+];
 
 export default async function AdminProtectedLayout({ children }: { children: React.ReactNode }) {
 	const cookieStore = await cookies();
@@ -24,49 +37,18 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
 	}
 
 	return (
-		<div style={{ minHeight: "100svh", display: "flex", flexDirection: "column" }}>
-			<header
-				style={{
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "space-between",
-					gap: 16,
-					padding: `16px ${pageGutter}`,
-					borderBottom: "1px solid var(--color-divider)",
-				}}
-			>
-				<span
-					style={{
-						fontFamily: "var(--font-heading)",
-						fontWeight: 600,
-						fontSize: 16,
-						textTransform: "uppercase",
-						letterSpacing: "0.04em",
-					}}
-				>
-					Pacific Hoardings — Admin
-				</span>
-				<nav style={{ display: "flex", gap: 20, marginRight: "auto", marginLeft: 24, fontSize: 14 }}>
-					<Link href="/admin" style={{ color: "inherit", textDecoration: "none" }}>
-						Dashboard
-					</Link>
-					<Link href="/admin/quotes" style={{ color: "inherit", textDecoration: "none" }}>
-						Quotes
-					</Link>
-					<Link href="/admin/projects" style={{ color: "inherit", textDecoration: "none" }}>
-						Projects
-					</Link>
-					<Link href="/admin/faqs" style={{ color: "inherit", textDecoration: "none" }}>
-						FAQs
-					</Link>
-				</nav>
+		<div className="admin-shell">
+			<AdminNav groups={NAV_GROUPS}>
+				<a className="admin-nav-link" href="/" target="_blank" rel="noopener">
+					View site ↗
+				</a>
 				<form action={logoutAction}>
-					<button type="submit" className="btn btn-secondary" style={{ fontSize: 13 }}>
+					<button type="submit" className="btn btn-secondary" style={{ width: "100%", fontSize: 13 }}>
 						Log out
 					</button>
 				</form>
-			</header>
-			<main style={{ flex: 1 }}>{children}</main>
+			</AdminNav>
+			<main className="admin-main">{children}</main>
 		</div>
 	);
 }
