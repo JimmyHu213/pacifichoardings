@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 	description: "Hoardings engineered to AS 4687 and AS/NZS 1170, council permits under the Roads Act, SafeWork NSW compliance and $20M public liability — what's behind every hoarding we put up.",
 };
 
-// getFaqs() reads D1 — see the note in (site)/page.tsx for why this has to
-// be explicit.
+// getFaqs(), getComplianceContent(), and getComplianceTags() read D1 — see the
+// note in (site)/page.tsx for why this has to be explicit.
 export const dynamic = "force-dynamic";
 
 export default async function CompliancePage() {

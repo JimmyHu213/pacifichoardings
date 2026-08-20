@@ -15,7 +15,7 @@ import {
 	statsFallback,
 	testimonialsFallback,
 } from "./fallbacks";
-import type { AboutContent, CompanyInfo, ComplianceCard, ComplianceContent, ComplianceTag, Faq, Project, Service, Stat, Testimonial } from "./types";
+import type { AboutContent, CompanyInfo, ComplianceCard, ComplianceContent, ComplianceTag, Faq, Project, Service, ServiceProcessStep, ServiceSpec, Stat, Testimonial } from "./types";
 
 export type { Stat, Service, ServiceImageSlot, Project, ProjectImage, Testimonial, Faq, CompanyInfo, AboutContent, ComplianceTag, ComplianceCard, ComplianceContent } from "./types";
 
@@ -124,6 +124,17 @@ interface ServiceRow {
 	images: string;
 }
 
+// A hand-edited JSON column that parses to a non-array would crash the page
+// outside this getter's catch — fall back to an empty list instead.
+function parseJsonArray<T>(value: string): T[] {
+	try {
+		const parsed = JSON.parse(value);
+		return Array.isArray(parsed) ? (parsed as T[]) : [];
+	} catch {
+		return [];
+	}
+}
+
 export const getServices = cache(async (): Promise<Service[]> => {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
@@ -138,11 +149,11 @@ export const getServices = cache(async (): Promise<Service[]> => {
 			tagline: row.tagline,
 			overview: row.overview,
 			whenYouNeedIt: row.when_you_need_it,
-			specs: JSON.parse(row.specs),
-			process: JSON.parse(row.process),
-			complianceTags: JSON.parse(row.compliance_tags),
-			faqIds: JSON.parse(row.faq_ids),
-			images: (JSON.parse(row.images) as { key: string; alt: string }[]).map((img) => ({
+			specs: parseJsonArray<ServiceSpec>(row.specs),
+			process: parseJsonArray<ServiceProcessStep>(row.process),
+			complianceTags: parseJsonArray<string>(row.compliance_tags),
+			faqIds: parseJsonArray<string>(row.faq_ids),
+			images: parseJsonArray<{ key: string; alt: string }>(row.images).map((img) => ({
 				key: img.key || null,
 				alt: img.alt,
 			})),
@@ -268,7 +279,8 @@ export async function getComplianceContent(): Promise<ComplianceContent> {
 		const parseCards = (value: string | undefined, fallback: ComplianceCard[]): ComplianceCard[] => {
 			if (!value) return fallback;
 			try {
-				return JSON.parse(value) as ComplianceCard[];
+				const parsed = JSON.parse(value);
+				return Array.isArray(parsed) ? (parsed as ComplianceCard[]) : fallback;
 			} catch {
 				return fallback;
 			}
