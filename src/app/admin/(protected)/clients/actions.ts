@@ -2,6 +2,7 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { redirect } from "next/navigation";
+import { requireAdminSession } from "@/lib/admin-auth";
 
 function field(formData: FormData, key: string, maxLength: number): string {
 	const value = formData.get(key);
@@ -12,6 +13,8 @@ function field(formData: FormData, key: string, maxLength: number): string {
 // field per row there's nothing useful to report, and required inputs stop
 // it client-side anyway.
 export async function addClientAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const name = field(formData, "name", 200);
 	const sortOrder = Number.parseInt(field(formData, "sort_order", 10), 10) || 0;
 
@@ -27,6 +30,8 @@ export async function addClientAction(formData: FormData): Promise<void> {
 }
 
 export async function updateClientAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	const name = field(formData, "name", 200);
 	const sortOrder = Number.parseInt(field(formData, "sort_order", 10), 10) || 0;
@@ -42,6 +47,8 @@ export async function updateClientAction(formData: FormData): Promise<void> {
 }
 
 export async function deleteClientAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	if (id) {
 		const { env } = await getCloudflareContext({ async: true });

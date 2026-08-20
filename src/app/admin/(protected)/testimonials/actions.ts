@@ -2,6 +2,7 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { redirect } from "next/navigation";
+import { requireAdminSession } from "@/lib/admin-auth";
 
 export type TestimonialFormState = { status: "idle" } | { status: "error"; message: string };
 
@@ -11,6 +12,8 @@ function field(formData: FormData, key: string, maxLength: number): string {
 }
 
 export async function saveTestimonialAction(_prevState: TestimonialFormState, formData: FormData): Promise<TestimonialFormState> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	const quote = field(formData, "quote", 600);
 	const source = field(formData, "source", 200);
@@ -43,6 +46,8 @@ export async function saveTestimonialAction(_prevState: TestimonialFormState, fo
 }
 
 export async function deleteTestimonialAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	if (!id) return;
 

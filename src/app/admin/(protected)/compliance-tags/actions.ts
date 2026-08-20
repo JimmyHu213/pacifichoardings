@@ -2,6 +2,7 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { redirect } from "next/navigation";
+import { requireAdminSession } from "@/lib/admin-auth";
 
 function field(formData: FormData, key: string, maxLength: number): string {
 	const value = formData.get(key);
@@ -12,6 +13,8 @@ function field(formData: FormData, key: string, maxLength: number): string {
 // field per row there's nothing useful to report, and required inputs stop
 // it client-side anyway.
 export async function addComplianceTagAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const label = field(formData, "label", 100);
 	const accent = formData.get("accent") === "on" ? 1 : 0;
 	const sortOrder = Number.parseInt(field(formData, "sort_order", 10), 10) || 0;
@@ -28,6 +31,8 @@ export async function addComplianceTagAction(formData: FormData): Promise<void> 
 }
 
 export async function updateComplianceTagAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	const label = field(formData, "label", 100);
 	const accent = formData.get("accent") === "on" ? 1 : 0;
@@ -44,6 +49,8 @@ export async function updateComplianceTagAction(formData: FormData): Promise<voi
 }
 
 export async function deleteComplianceTagAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	if (id) {
 		const { env } = await getCloudflareContext({ async: true });

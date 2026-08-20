@@ -23,7 +23,7 @@ INSERT INTO site_settings (key, value, updated_at) VALUES
 	('about.who_body', 'We started as a hoarding installer and became the crew builders call when the paperwork matters as much as the panels. Every job still runs the same way — one crew stands it, one engineer signs it, and the same point of contact answers the phone from quote to dismantle.', '2026-08-20T00:00:00.000Z'),
 	('about.compliant_heading', 'Compliant is the minimum', '2026-08-20T00:00:00.000Z'),
 	('about.compliant_body', 'Anyone can stand a fence. We design and certify every hoarding to AS 4687, walk it past council before the first panel goes up, and keep it standing through the wind study, the inspection and eighteen months of the public leaning on it. Compliant is the floor we build from, not the ceiling we aim for.', '2026-08-20T00:00:00.000Z'),
-	('about.yard_body', 'Every panel and gantry goes out of the same Morisset yard, measured and staged against the site plan before the truck leaves. It's also where the paperwork gets filed — one address for the whole job.', '2026-08-20T00:00:00.000Z'),
+	('about.yard_body', 'Every panel and gantry goes out of the same Morisset yard, measured and staged against the site plan before the truck leaves. It’s also where the paperwork gets filed — one address for the whole job.', '2026-08-20T00:00:00.000Z'),
 	('about.crew_image_alt', 'Pacific Hoardings crew on site', '2026-08-20T00:00:00.000Z'),
 	('about.yard_image_alt', 'Pacific Hoardings yard, Morisset', '2026-08-20T00:00:00.000Z');
 

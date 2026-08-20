@@ -2,6 +2,7 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { redirect } from "next/navigation";
+import { requireAdminSession } from "@/lib/admin-auth";
 
 export type StatFormState = { status: "idle" } | { status: "error"; message: string };
 
@@ -11,6 +12,8 @@ function field(formData: FormData, key: string, maxLength: number): string {
 }
 
 export async function saveStatAction(_prevState: StatFormState, formData: FormData): Promise<StatFormState> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	const value = field(formData, "value", 40);
 	const label = field(formData, "label", 100);
@@ -50,6 +53,8 @@ export async function saveStatAction(_prevState: StatFormState, formData: FormDa
 }
 
 export async function deleteStatAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
 	const id = field(formData, "id", 20);
 	if (!id) return;
 

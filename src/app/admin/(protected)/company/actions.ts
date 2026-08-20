@@ -1,6 +1,7 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { requireAdminSession } from "@/lib/admin-auth";
 
 export type CompanyFormState = { status: "idle" } | { status: "saved" } | { status: "error"; message: string };
 
@@ -20,6 +21,8 @@ const FIELDS: { name: string; key: string; label: string; max: number }[] = [
 ];
 
 export async function saveCompanyAction(_prevState: CompanyFormState, formData: FormData): Promise<CompanyFormState> {
+	await requireAdminSession();
+
 	const values = FIELDS.map((f) => ({ ...f, value: field(formData, f.name, f.max) }));
 	const missing = values.find((f) => !f.value);
 	if (missing) return { status: "error", message: `Add the ${missing.label}.` };
