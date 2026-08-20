@@ -213,3 +213,34 @@ export async function createServiceAction(_prevState: ServiceFormState, formData
 
 	redirect(`/admin/services/${slug}/edit`);
 }
+
+export async function deleteServiceAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
+	const slug = field(formData, "slug", 100);
+	if (!SLUG_PATTERN.test(slug)) return;
+
+	const { env } = await getCloudflareContext({ async: true });
+	// Read the photo keys before the row goes — the R2 objects are only
+	// removed once D1 has committed, so a failed delete can't strand a live
+	// service pointing at missing images.
+	const existing = await env.DB.prepare("SELECT images FROM services WHERE slug = ?").bind(slug).first<{ images: string }>();
+	await env.DB.prepare("DELETE FROM services WHERE slug = ?").bind(slug).run();
+
+	if (existing) {
+		let keys: string[] = [];
+		try {
+			keys = (JSON.parse(existing.images) as { key: string }[]).filter((img) => img.key).map((img) => img.key);
+		} catch {
+			keys = [];
+		}
+		for (const key of keys) {
+			await env.PROJECT_IMAGES.delete(key).catch(() => {});
+		}
+	}
+
+	// Projects tagged with this slug are deliberately left alone: they keep
+	// showing the raw slug until retagged, which is the agreed behaviour and
+	// matches how an unknown slug already degrades today.
+	redirect("/admin/services");
+}
