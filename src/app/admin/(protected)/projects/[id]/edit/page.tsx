@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { services } from "@/lib/content/static/services";
+import { getServices } from "@/lib/content";
 import { pageGutter } from "@/lib/style-tokens";
 import ProjectForm from "../../project-form";
 import ProjectPhotos from "../../project-photos";
@@ -46,6 +46,7 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
 	)
 		.bind(id)
 		.all<PhotoRow>();
+	const services = await getServices();
 
 	return (
 		<div style={{ maxWidth: 1400, margin: "0 auto", padding: `32px ${pageGutter} 64px` }}>
