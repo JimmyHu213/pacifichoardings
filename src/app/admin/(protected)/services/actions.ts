@@ -1,8 +1,8 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { redirect } from "next/navigation";
 import { requireAdminSession } from "@/lib/admin-auth";
-import { services as staticServices } from "@/lib/content/static/services";
 
 export type ServiceFormState = { status: "idle" } | { status: "saved" } | { status: "error"; message: string };
 
@@ -10,8 +10,7 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 // Allowlist, not startsWith("image/") — image/svg+xml can carry scripts and
 // /media serves from the app origin.
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"]);
-// The four services are fixed — slugs are never created, deleted or renamed.
-const SERVICE_SLUGS = new Set(staticServices.map((s) => s.slug));
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function field(formData: FormData, key: string, maxLength: number): string {
 	const value = formData.get(key);
@@ -22,7 +21,9 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 	await requireAdminSession();
 
 	const slug = field(formData, "slug", 100);
-	if (!SERVICE_SLUGS.has(slug)) return { status: "error", message: "Unknown service." };
+	// Slugs are locked after creation — this action only ever updates an
+	// existing row, and the pre-flight read below rejects unknown slugs.
+	if (!SLUG_PATTERN.test(slug)) return { status: "error", message: "Unknown service." };
 
 	const title = field(formData, "title", 100);
 	const tagline = field(formData, "tagline", 200);
@@ -55,6 +56,9 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 		.slice(0, 6);
 	if (complianceTags.length === 0) return { status: "error", message: "Add at least one compliance tag." };
 
+	const sortOrder = Number.parseInt(field(formData, "sort_order", 10), 10);
+	if (Number.isNaN(sortOrder)) return { status: "error", message: "Sort order must be a number." };
+
 	// Photo slots: validate both before writing anything (mirrors about/actions.ts).
 	const uploads: { index: number; file: File }[] = [];
 	for (const index of [0, 1]) {
@@ -74,7 +78,7 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 	let images: { key: string; alt: string }[];
 	try {
 		const existing = await env.DB.prepare("SELECT images FROM services WHERE slug = ?").bind(slug).first<{ images: string }>();
-		if (!existing) return { status: "error", message: "That service isn't in the database yet — apply the migration first." };
+		if (!existing) return { status: "error", message: "That service no longer exists." };
 		images = (JSON.parse(existing.images) as { key: string; alt: string }[]).map((img, i) => ({ key: img.key, alt: alts[i] }));
 	} catch (error) {
 		console.error("Service pre-flight read failed", error);
@@ -99,7 +103,7 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 
 		await env.DB.prepare(
 			`UPDATE services SET title = ?, tagline = ?, body = ?, overview = ?, when_you_need_it = ?,
-			 specs = ?, process = ?, compliance_tags = ?, images = ?, updated_at = ? WHERE slug = ?`,
+			 specs = ?, process = ?, compliance_tags = ?, images = ?, sort_order = ?, updated_at = ? WHERE slug = ?`,
 		)
 			.bind(
 				title,
@@ -111,6 +115,7 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 				JSON.stringify(process),
 				JSON.stringify(complianceTags),
 				JSON.stringify(images),
+				sortOrder,
 				now,
 				slug,
 			)
@@ -128,4 +133,118 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 	}
 
 	return { status: "saved" };
+}
+
+export async function createServiceAction(_prevState: ServiceFormState, formData: FormData): Promise<ServiceFormState> {
+	await requireAdminSession();
+
+	const slug = field(formData, "slug", 100);
+	if (!SLUG_PATTERN.test(slug)) {
+		return { status: "error", message: "Slug must be lowercase letters, numbers and hyphens." };
+	}
+
+	const title = field(formData, "title", 100);
+	const tagline = field(formData, "tagline", 200);
+	const body = field(formData, "body", 500);
+	const overview = field(formData, "overview", 2000);
+	const whenYouNeedIt = field(formData, "when_you_need_it", 2000);
+	if (!title) return { status: "error", message: "Add the title." };
+	if (!tagline) return { status: "error", message: "Add the tagline." };
+	if (!body) return { status: "error", message: "Add the card copy." };
+	if (!overview) return { status: "error", message: "Add the overview." };
+	if (!whenYouNeedIt) return { status: "error", message: "Add the 'when you need it' paragraph." };
+
+	const specs: { label: string; detail: string }[] = [];
+	const process: { step: string; detail: string }[] = [];
+	for (let i = 0; i < 4; i++) {
+		const specLabel = field(formData, `spec_label_${i}`, 100);
+		const specDetail = field(formData, `spec_detail_${i}`, 300);
+		const processStep = field(formData, `process_step_${i}`, 100);
+		const processDetail = field(formData, `process_detail_${i}`, 300);
+		if (!specLabel || !specDetail) return { status: "error", message: `Fill in spec card ${i + 1} (label and detail).` };
+		if (!processStep || !processDetail) return { status: "error", message: `Fill in process step ${i + 1} (name and detail).` };
+		specs.push({ label: specLabel, detail: specDetail });
+		process.push({ step: processStep, detail: processDetail });
+	}
+
+	const complianceTags = field(formData, "compliance_tags", 600)
+		.split("\n")
+		.map((t) => t.trim())
+		.filter(Boolean)
+		.slice(0, 6);
+	if (complianceTags.length === 0) return { status: "error", message: "Add at least one compliance tag." };
+
+	const alts = [field(formData, "image_alt_0", 300), field(formData, "image_alt_1", 300)];
+	if (!alts[0] || !alts[1]) return { status: "error", message: "Add both photo descriptions." };
+
+	const sortOrder = Number.parseInt(field(formData, "sort_order", 10), 10);
+	if (Number.isNaN(sortOrder)) return { status: "error", message: "Sort order must be a number." };
+
+	// Photos are attached after creation from the edit page — a new service
+	// starts with empty slots so there is nothing to upload or roll back here.
+	const images = alts.map((alt) => ({ key: "", alt }));
+
+	try {
+		const { env } = await getCloudflareContext({ async: true });
+		const now = new Date().toISOString();
+		await env.DB.prepare(
+			`INSERT INTO services (slug, sort_order, title, body, tagline, overview, when_you_need_it, specs, process, compliance_tags, faq_ids, images, updated_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		)
+			.bind(
+				slug,
+				sortOrder,
+				title,
+				body,
+				tagline,
+				overview,
+				whenYouNeedIt,
+				JSON.stringify(specs),
+				JSON.stringify(process),
+				JSON.stringify(complianceTags),
+				"[]",
+				JSON.stringify(images),
+				now,
+			)
+			.run();
+	} catch (error) {
+		if (error instanceof Error && error.message.includes("UNIQUE")) {
+			return { status: "error", message: "That slug is already in use." };
+		}
+		console.error("Service create failed", error);
+		return { status: "error", message: "Save failed — try again." };
+	}
+
+	redirect(`/admin/services/${slug}/edit`);
+}
+
+export async function deleteServiceAction(formData: FormData): Promise<void> {
+	await requireAdminSession();
+
+	const slug = field(formData, "slug", 100);
+	if (!SLUG_PATTERN.test(slug)) return;
+
+	const { env } = await getCloudflareContext({ async: true });
+	// Read the photo keys before the row goes — the R2 objects are only
+	// removed once D1 has committed, so a failed delete can't strand a live
+	// service pointing at missing images.
+	const existing = await env.DB.prepare("SELECT images FROM services WHERE slug = ?").bind(slug).first<{ images: string }>();
+	await env.DB.prepare("DELETE FROM services WHERE slug = ?").bind(slug).run();
+
+	if (existing) {
+		let keys: string[] = [];
+		try {
+			keys = (JSON.parse(existing.images) as { key: string }[]).filter((img) => img.key).map((img) => img.key);
+		} catch {
+			keys = [];
+		}
+		for (const key of keys) {
+			await env.PROJECT_IMAGES.delete(key).catch(() => {});
+		}
+	}
+
+	// Projects tagged with this slug are deliberately left alone: they keep
+	// showing the raw slug until retagged, which is the agreed behaviour and
+	// matches how an unknown slug already degrades today.
+	redirect("/admin/services");
 }

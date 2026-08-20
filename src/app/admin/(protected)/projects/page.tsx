@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { services } from "@/lib/content/static/services";
+import { getServices } from "@/lib/content";
 import { pageGutter } from "@/lib/style-tokens";
 import { deleteProjectAction } from "./actions";
 
@@ -26,7 +26,7 @@ export default async function AdminProjectsPage() {
 			(SELECT pi.image_key FROM project_images pi WHERE pi.project_id = p.id ORDER BY pi.sort_order, pi.id LIMIT 1) AS image_key
 		 FROM projects p ORDER BY p.sort_order, p.id`,
 	).all<ProjectListRow>();
-	const serviceTitleBySlug = new Map(services.map((s) => [s.slug, s.title]));
+	const serviceTitleBySlug = new Map((await getServices()).map((s) => [s.slug, s.title]));
 
 	return (
 		<div style={{ maxWidth: 1400, margin: "0 auto", padding: `32px ${pageGutter} 64px` }}>

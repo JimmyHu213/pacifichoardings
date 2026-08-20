@@ -112,6 +112,7 @@ export async function getComplianceTags(): Promise<ComplianceTag[]> {
 
 interface ServiceRow {
 	slug: string;
+	sort_order: number;
 	title: string;
 	body: string;
 	tagline: string;
@@ -139,11 +140,11 @@ export const getServices = cache(async (): Promise<Service[]> => {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
 		const { results } = await env.DB.prepare(
-			"SELECT slug, title, body, tagline, overview, when_you_need_it, specs, process, compliance_tags, faq_ids, images FROM services ORDER BY rowid",
+			"SELECT slug, sort_order, title, body, tagline, overview, when_you_need_it, specs, process, compliance_tags, faq_ids, images FROM services ORDER BY sort_order, rowid",
 		).all<ServiceRow>();
-		if (results.length === 0) return services;
 		return results.map((row) => ({
 			slug: row.slug,
+			sortOrder: row.sort_order,
 			title: row.title,
 			body: row.body,
 			tagline: row.tagline,
