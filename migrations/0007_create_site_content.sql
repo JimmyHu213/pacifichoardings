@@ -86,5 +86,5 @@ CREATE TABLE testimonials (
 );
 
 INSERT INTO testimonials (quote, source, sort_order, created_at, updated_at) VALUES
-	('"They had the Class B up over the footpath in a weekend — certified, lit, and signed off by council before we''d finished demo."', '— Site manager, tier-one builder, Sydney', 0, '2026-08-20T00:00:00.000Z', '2026-08-20T00:00:00.000Z'),
-	('"Quote on Tuesday, hoarding standing Friday. The graphics wrap made the client happier than the building did."', '— Development director, North Sydney', 1, '2026-08-20T00:00:00.000Z', '2026-08-20T00:00:00.000Z');
+	('“They had the Class B up over the footpath in a weekend — certified, lit, and signed off by council before we''d finished demo.”', '— Site manager, tier-one builder, Sydney', 0, '2026-08-20T00:00:00.000Z', '2026-08-20T00:00:00.000Z'),
+	('“Quote on Tuesday, hoarding standing Friday. The graphics wrap made the client happier than the building did.”', '— Development director, North Sydney', 1, '2026-08-20T00:00:00.000Z', '2026-08-20T00:00:00.000Z');
