@@ -1,6 +1,7 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { redirect } from "next/navigation";
 import { requireAdminSession } from "@/lib/admin-auth";
 
 export type ServiceFormState = { status: "idle" } | { status: "saved" } | { status: "error"; message: string };
@@ -128,4 +129,87 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 	}
 
 	return { status: "saved" };
+}
+
+export async function createServiceAction(_prevState: ServiceFormState, formData: FormData): Promise<ServiceFormState> {
+	await requireAdminSession();
+
+	const slug = field(formData, "slug", 100);
+	if (!SLUG_PATTERN.test(slug)) {
+		return { status: "error", message: "Slug must be lowercase letters, numbers and hyphens." };
+	}
+
+	const title = field(formData, "title", 100);
+	const tagline = field(formData, "tagline", 200);
+	const body = field(formData, "body", 500);
+	const overview = field(formData, "overview", 2000);
+	const whenYouNeedIt = field(formData, "when_you_need_it", 2000);
+	if (!title) return { status: "error", message: "Add the title." };
+	if (!tagline) return { status: "error", message: "Add the tagline." };
+	if (!body) return { status: "error", message: "Add the card copy." };
+	if (!overview) return { status: "error", message: "Add the overview." };
+	if (!whenYouNeedIt) return { status: "error", message: "Add the 'when you need it' paragraph." };
+
+	const specs: { label: string; detail: string }[] = [];
+	const process: { step: string; detail: string }[] = [];
+	for (let i = 0; i < 4; i++) {
+		const specLabel = field(formData, `spec_label_${i}`, 100);
+		const specDetail = field(formData, `spec_detail_${i}`, 300);
+		const processStep = field(formData, `process_step_${i}`, 100);
+		const processDetail = field(formData, `process_detail_${i}`, 300);
+		if (!specLabel || !specDetail) return { status: "error", message: `Fill in spec card ${i + 1} (label and detail).` };
+		if (!processStep || !processDetail) return { status: "error", message: `Fill in process step ${i + 1} (name and detail).` };
+		specs.push({ label: specLabel, detail: specDetail });
+		process.push({ step: processStep, detail: processDetail });
+	}
+
+	const complianceTags = field(formData, "compliance_tags", 600)
+		.split("\n")
+		.map((t) => t.trim())
+		.filter(Boolean)
+		.slice(0, 6);
+	if (complianceTags.length === 0) return { status: "error", message: "Add at least one compliance tag." };
+
+	const alts = [field(formData, "image_alt_0", 300), field(formData, "image_alt_1", 300)];
+	if (!alts[0] || !alts[1]) return { status: "error", message: "Add both photo descriptions." };
+
+	const sortOrder = Number.parseInt(field(formData, "sort_order", 10), 10);
+	if (Number.isNaN(sortOrder)) return { status: "error", message: "Sort order must be a number." };
+
+	// Photos are attached after creation from the edit page — a new service
+	// starts with empty slots so there is nothing to upload or roll back here.
+	const images = alts.map((alt) => ({ key: "", alt }));
+
+	try {
+		const { env } = await getCloudflareContext({ async: true });
+		const now = new Date().toISOString();
+		await env.DB.prepare(
+			`INSERT INTO services (slug, sort_order, title, body, tagline, overview, when_you_need_it, specs, process, compliance_tags, faq_ids, images, updated_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		)
+			.bind(
+				slug,
+				sortOrder,
+				title,
+				body,
+				tagline,
+				overview,
+				whenYouNeedIt,
+				JSON.stringify(specs),
+				JSON.stringify(process),
+				JSON.stringify(complianceTags),
+				"[]",
+				JSON.stringify(images),
+				now,
+			)
+			.run();
+	} catch (error) {
+		if (error instanceof Error && error.message.includes("UNIQUE")) {
+			return { status: "error", message: "That slug is already in use." };
+		}
+		console.error("Service create failed", error);
+		return { status: "error", message: "Save failed — try again." };
+	}
+
+	redirect(`/admin/services/${slug}/edit`);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { saveServiceAction, type ServiceFormState } from "./actions";
+import { createServiceAction, saveServiceAction, type ServiceFormState } from "./actions";
 
 const initialState: ServiceFormState = { status: "idle" };
 
@@ -16,6 +16,7 @@ export interface ServiceFormValues {
 	process: { step: string; detail: string }[]; // exactly 4
 	complianceTags: string[];
 	images: { key: string | null; alt: string }[]; // exactly 2
+	sortOrder: number;
 }
 
 function PhotoSlot({
@@ -52,8 +53,9 @@ function PhotoSlot({
 	);
 }
 
-export default function ServiceForm({ initial }: { initial: ServiceFormValues }) {
-	const [state, formAction, isPending] = useActionState(saveServiceAction, initialState);
+export default function ServiceForm({ initial }: { initial?: ServiceFormValues }) {
+	const isEdit = Boolean(initial);
+	const [state, formAction, isPending] = useActionState(isEdit ? saveServiceAction : createServiceAction, initialState);
 
 	return (
 		<form action={formAction} style={{ display: "grid", gap: 16, maxWidth: 720 }}>
@@ -67,66 +69,84 @@ export default function ServiceForm({ initial }: { initial: ServiceFormValues })
 					Saved — the service page shows the new content immediately.
 				</div>
 			)}
-			<input type="hidden" name="slug" value={initial.slug} />
+			<div className="field">
+				<label htmlFor="s-slug">Slug {isEdit && "(fixed — it's the page URL)"}</label>
+				<input
+					className="input"
+					id="s-slug"
+					name="slug"
+					type="text"
+					required
+					pattern="[a-z0-9]+(-[a-z0-9]+)*"
+					title="Lowercase letters, numbers and hyphens"
+					defaultValue={initial?.slug}
+					readOnly={isEdit}
+					style={isEdit ? { opacity: 0.6 } : undefined}
+				/>
+			</div>
+			<div className="field" style={{ maxWidth: 160 }}>
+				<label htmlFor="s-sort">Sort order</label>
+				<input className="input" id="s-sort" name="sort_order" type="number" required defaultValue={initial?.sortOrder ?? 0} />
+			</div>
 			<div className="field">
 				<label htmlFor="s-title">Title</label>
-				<input className="input" id="s-title" name="title" type="text" required defaultValue={initial.title} />
+				<input className="input" id="s-title" name="title" type="text" required defaultValue={initial?.title} />
 			</div>
 			<div className="field">
 				<label htmlFor="s-tagline">Tagline</label>
-				<input className="input" id="s-tagline" name="tagline" type="text" required defaultValue={initial.tagline} />
+				<input className="input" id="s-tagline" name="tagline" type="text" required defaultValue={initial?.tagline} />
 			</div>
 			<div className="field">
 				<label htmlFor="s-body">Card copy</label>
-				<textarea className="input" id="s-body" name="body" required rows={3} defaultValue={initial.body} />
+				<textarea className="input" id="s-body" name="body" required rows={3} defaultValue={initial?.body} />
 			</div>
 			<div className="field">
 				<label htmlFor="s-overview">Overview</label>
-				<textarea className="input" id="s-overview" name="overview" required rows={4} defaultValue={initial.overview} />
+				<textarea className="input" id="s-overview" name="overview" required rows={4} defaultValue={initial?.overview} />
 			</div>
 			<div className="field">
 				<label htmlFor="s-when">When you need it</label>
-				<textarea className="input" id="s-when" name="when_you_need_it" required rows={4} defaultValue={initial.whenYouNeedIt} />
+				<textarea className="input" id="s-when" name="when_you_need_it" required rows={4} defaultValue={initial?.whenYouNeedIt} />
 			</div>
 			<fieldset style={{ border: "1px solid var(--color-divider)", padding: 16, display: "grid", gap: 16 }}>
 				<legend style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", padding: "0 6px" }}>Spec cards</legend>
-				{initial.specs.map((spec, i) => (
+				{[0, 1, 2, 3].map((i) => (
 					<div key={i} style={{ display: "grid", gap: 12 }}>
 						<div className="field">
 							<label htmlFor={`s-spec-label-${i}`}>Spec {i + 1} label</label>
-							<input className="input" id={`s-spec-label-${i}`} name={`spec_label_${i}`} type="text" required defaultValue={spec.label} />
+							<input className="input" id={`s-spec-label-${i}`} name={`spec_label_${i}`} type="text" required defaultValue={initial?.specs[i]?.label} />
 						</div>
 						<div className="field">
 							<label htmlFor={`s-spec-detail-${i}`}>Spec {i + 1} detail</label>
-							<textarea className="input" id={`s-spec-detail-${i}`} name={`spec_detail_${i}`} required rows={2} defaultValue={spec.detail} />
+							<textarea className="input" id={`s-spec-detail-${i}`} name={`spec_detail_${i}`} required rows={2} defaultValue={initial?.specs[i]?.detail} />
 						</div>
 					</div>
 				))}
 			</fieldset>
 			<fieldset style={{ border: "1px solid var(--color-divider)", padding: 16, display: "grid", gap: 16 }}>
 				<legend style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", padding: "0 6px" }}>Process steps</legend>
-				{initial.process.map((step, i) => (
+				{[0, 1, 2, 3].map((i) => (
 					<div key={i} style={{ display: "grid", gap: 12 }}>
 						<div className="field">
 							<label htmlFor={`s-process-step-${i}`}>Step {i + 1} name</label>
-							<input className="input" id={`s-process-step-${i}`} name={`process_step_${i}`} type="text" required defaultValue={step.step} />
+							<input className="input" id={`s-process-step-${i}`} name={`process_step_${i}`} type="text" required defaultValue={initial?.process[i]?.step} />
 						</div>
 						<div className="field">
 							<label htmlFor={`s-process-detail-${i}`}>Step {i + 1} detail</label>
-							<textarea className="input" id={`s-process-detail-${i}`} name={`process_detail_${i}`} required rows={2} defaultValue={step.detail} />
+							<textarea className="input" id={`s-process-detail-${i}`} name={`process_detail_${i}`} required rows={2} defaultValue={initial?.process[i]?.detail} />
 						</div>
 					</div>
 				))}
 			</fieldset>
 			<div className="field">
 				<label htmlFor="s-compliance-tags">Compliance tags — one per line, up to 6</label>
-				<textarea className="input" id="s-compliance-tags" name="compliance_tags" required rows={4} defaultValue={initial.complianceTags.join("\n")} />
+				<textarea className="input" id="s-compliance-tags" name="compliance_tags" required rows={4} defaultValue={initial?.complianceTags.join("\n")} />
 			</div>
-			<PhotoSlot label="Photo 1 (top of page)" fileField="photo_0" altField="image_alt_0" currentKey={initial.images[0].key} currentAlt={initial.images[0].alt} />
-			<PhotoSlot label="Photo 2 (compliance section)" fileField="photo_1" altField="image_alt_1" currentKey={initial.images[1].key} currentAlt={initial.images[1].alt} />
+			<PhotoSlot label="Photo 1 (top of page)" fileField="photo_0" altField="image_alt_0" currentKey={initial?.images[0]?.key ?? null} currentAlt={initial?.images[0]?.alt ?? ""} />
+			<PhotoSlot label="Photo 2 (compliance section)" fileField="photo_1" altField="image_alt_1" currentKey={initial?.images[1]?.key ?? null} currentAlt={initial?.images[1]?.alt ?? ""} />
 			<div>
 				<button type="submit" className="btn btn-primary" style={{ minHeight: 40, paddingInline: 22 }} disabled={isPending}>
-					{isPending ? "Saving…" : "Save service"}
+					{isPending ? "Saving…" : isEdit ? "Save service" : "Create service"}
 				</button>
 			</div>
 		</form>

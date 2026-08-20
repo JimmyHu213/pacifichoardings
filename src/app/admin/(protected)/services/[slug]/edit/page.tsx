@@ -28,6 +28,7 @@ export default async function EditServicePage({ params }: { params: Promise<{ sl
 		process: service.process,
 		complianceTags: service.complianceTags,
 		images: service.images.map((img) => ({ key: img.key, alt: img.alt })),
+		sortOrder: service.sortOrder,
 	};
 
 	return (
