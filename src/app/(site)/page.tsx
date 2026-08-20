@@ -6,7 +6,7 @@ import ProjectImage from "@/components/project-image";
 import ScrollReveal from "@/components/scroll-reveal";
 import SiteFooter from "@/components/site-footer";
 import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
-import { getClients, getFaqs, getProjects, getServices, getStats, getTestimonials } from "@/lib/content";
+import { getClients, getCompanyInfo, getFaqs, getProjects, getServices, getStats, getTestimonials } from "@/lib/content";
 import type { Project } from "@/lib/content";
 
 // getProjects()/getFaqs() read D1 — a plain data read isn't a signal Next's
@@ -83,13 +83,14 @@ function ProjectRail({ projects, hidden }: { projects: Project[]; hidden?: boole
 }
 
 export default async function Home() {
-	const [clients, stats, services, projects, testimonials, faqs] = await Promise.all([
+	const [clients, stats, services, projects, testimonials, faqs, company] = await Promise.all([
 		getClients(),
 		getStats(),
 		getServices(),
 		getProjects(),
 		getTestimonials(),
 		getFaqs(),
+		getCompanyInfo(),
 	]);
 
 	return (
@@ -587,21 +588,21 @@ export default async function Home() {
 						<div style={{ marginTop: 32, fontSize: 15, lineHeight: "28px" }}>
 							<div>
 								<strong style={{ fontWeight: 600 }}>Phone</strong> —{" "}
-								<a href="tel:1300722477" style={{ color: "var(--color-accent-300)" }}>
-									1300 722 477
+								<a href={`tel:${company.phone.replace(/[^\d+]/g, "")}`} style={{ color: "var(--color-accent-300)" }}>
+									{company.phone}
 								</a>
 							</div>
 							<div>
 								<strong style={{ fontWeight: 600 }}>Email</strong> —{" "}
-								<a href="mailto:admin@pacificgrp.com.au" style={{ color: "var(--color-accent-300)" }}>
-									admin@pacificgrp.com.au
+								<a href={`mailto:${company.email}`} style={{ color: "var(--color-accent-300)" }}>
+									{company.email}
 								</a>
 							</div>
 							<div>
-								<strong style={{ fontWeight: 600 }}>Yard</strong> — Morisset, NSW
+								<strong style={{ fontWeight: 600 }}>Yard</strong> — {company.yardSuburb}
 							</div>
 							<div>
-								<strong style={{ fontWeight: 600 }}>Hours</strong> — 8am–4pm
+								<strong style={{ fontWeight: 600 }}>Hours</strong> — {company.hours}
 							</div>
 						</div>
 					</div>
@@ -618,7 +619,7 @@ export default async function Home() {
 						<i className="corner tr" style={{ color: "color-mix(in srgb, var(--color-bg) 70%, transparent)" }}></i>
 						<i className="corner bl" style={{ color: "color-mix(in srgb, var(--color-bg) 70%, transparent)" }}></i>
 						<i className="corner br" style={{ color: "color-mix(in srgb, var(--color-bg) 70%, transparent)" }}></i>
-						<QuoteForm />
+						<QuoteForm phone={company.phone} />
 					</div>
 					<SiteFooter />
 				</div>

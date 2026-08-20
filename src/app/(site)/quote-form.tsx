@@ -5,7 +5,7 @@ import { submitQuote, type QuoteFormState } from "./quote-actions";
 
 const initialState: QuoteFormState = { status: "idle", attempt: 0 };
 
-export default function QuoteForm() {
+export default function QuoteForm({ phone }: { phone: string }) {
 	const [state, formAction, isPending] = useActionState(submitQuote, initialState);
 	const values = state.status === "error" ? state.values : undefined;
 
@@ -19,7 +19,7 @@ export default function QuoteForm() {
 					One of our estimators will call you to book the site walk, and your itemised quote will follow the visit.
 				</p>
 				<p style={{ fontSize: 13, lineHeight: "24px", margin: "16px 0 0", color: "color-mix(in srgb, var(--color-text) 70%, transparent)" }}>
-					In a hurry? Call <a href="tel:1300722477">1300 722 477</a> now.
+					In a hurry? Call <a href={`tel:${phone.replace(/[^\d+]/g, "")}`}>{phone}</a> now.
 				</p>
 			</div>
 		);

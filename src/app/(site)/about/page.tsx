@@ -3,7 +3,7 @@ import Corners from "@/components/corners";
 import ImageSlot from "@/components/image-slot";
 import QuoteCta from "@/components/quote-cta";
 import ScrollReveal from "@/components/scroll-reveal";
-import { getClients, getStats } from "@/lib/content";
+import { getAboutContent, getClients, getComplianceTags, getStats } from "@/lib/content";
 import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-	const [stats, clients] = await Promise.all([getStats(), getClients()]);
+	const [stats, clients, about, tags] = await Promise.all([getStats(), getClients(), getAboutContent(), getComplianceTags()]);
 
 	return (
 		<>
@@ -23,14 +23,13 @@ export default async function AboutPage() {
 					<span style={kicker}>About</span>
 					<hr style={kickerRule} />
 					<h1 className="ph-reveal" style={{ ...sectionTitle, fontSize: "clamp(36px, 4.4vw, 60px)", margin: "0 0 16px" }}>
-						One crew. One engineer. Every hoarding.
+						{about.headline}
 					</h1>
 					<p
 						className="ph-reveal"
 						style={{ fontSize: 18, lineHeight: "28px", maxWidth: "56ch", margin: 0, color: "color-mix(in srgb, var(--color-text) 78%, transparent)" }}
 					>
-						Pacific Hoardings designs, certifies and installs site hoardings for builders, developers and government across
-						NSW — the same crew and the same engineer from the first site walk to the day it comes down.
+						{about.intro}
 					</p>
 				</section>
 
@@ -44,23 +43,28 @@ export default async function AboutPage() {
 					}}
 				>
 					<div>
-						<span style={kicker}>Who we are</span>
+						<span style={kicker}>{about.whoHeading}</span>
 						<hr style={kickerRule} />
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							We started as a hoarding installer and became the crew builders call when the paperwork matters as much as the
-							panels. Every job still runs the same way — one crew stands it, one engineer signs it, and the same point of
-							contact answers the phone from quote to dismantle.
+							{about.whoBody}
 						</p>
-						<span style={{ ...kicker, marginTop: 28 }}>Compliant is the minimum</span>
+						<span style={{ ...kicker, marginTop: 28 }}>{about.compliantHeading}</span>
 						<hr style={kickerRule} />
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							Anyone can stand a fence. We design and certify every hoarding to AS 4687, walk it past council before the first
-							panel goes up, and keep it standing through the wind study, the inspection and eighteen months of the public
-							leaning on it. Compliant is the floor we build from, not the ceiling we aim for.
+							{about.compliantBody}
 						</p>
 					</div>
 					<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-						<ImageSlot placeholder="Drop a photo — the crew on site" label="Pacific Hoardings crew on site" />
+						{about.crewImageKey ? (
+							// eslint-disable-next-line @next/next/no-img-element -- R2 photos are served unoptimised by design (see /media route)
+							<img
+								src={`/media/${about.crewImageKey}`}
+								alt={about.crewImageAlt}
+								style={{ display: "block", width: "100%", height: "auto" }}
+							/>
+						) : (
+							<ImageSlot placeholder="Drop a photo — the crew on site" label={about.crewImageAlt} />
+						)}
 						<Corners />
 					</figure>
 				</section>
@@ -154,12 +158,20 @@ export default async function AboutPage() {
 						}}
 					>
 						<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-							<ImageSlot placeholder="Drop a photo — the yard, Morisset" label="Pacific Hoardings yard, Morisset" />
+							{about.yardImageKey ? (
+								// eslint-disable-next-line @next/next/no-img-element -- R2 photos are served unoptimised by design (see /media route)
+								<img
+									src={`/media/${about.yardImageKey}`}
+									alt={about.yardImageAlt}
+									style={{ display: "block", width: "100%", height: "auto" }}
+								/>
+							) : (
+								<ImageSlot placeholder="Drop a photo — the yard, Morisset" label={about.yardImageAlt} />
+							)}
 							<Corners />
 						</figure>
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							Every panel and gantry goes out of the same Morisset yard, measured and staged against the site plan before
-							the truck leaves. It&rsquo;s also where the paperwork gets filed — one address for the whole job.
+							{about.yardBody}
 						</p>
 					</div>
 				</section>
@@ -180,10 +192,11 @@ export default async function AboutPage() {
 					<span style={kicker}>Compliance</span>
 					<hr style={kickerRule} />
 					<div className="ph-reveal" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-						<span className="tag tag-accent">AS 4687 certified</span>
-						<span className="tag tag-outline">SafeWork NSW compliant</span>
-						<span className="tag tag-outline">$20M public liability</span>
-						<span className="tag tag-outline">Licensed installers</span>
+						{tags.map((tag) => (
+							<span key={tag.id} className={tag.accent ? "tag tag-accent" : "tag tag-outline"}>
+								{tag.label}
+							</span>
+						))}
 					</div>
 				</section>
 			</div>

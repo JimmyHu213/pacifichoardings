@@ -1,4 +1,8 @@
-export default function SiteFooter() {
+import { getCompanyInfo } from "@/lib/content";
+
+export default async function SiteFooter() {
+	const company = await getCompanyInfo();
+
 	return (
 		<footer
 			style={{
@@ -14,8 +18,12 @@ export default function SiteFooter() {
 				justifyContent: "space-between",
 			}}
 		>
-			<span>Pacific Hoarding Pty Ltd · ABN 96 686 186 934</span>
-			<span>Morisset, NSW · Servicing Sydney &amp; the Central Coast</span>
+			<span>
+				{company.legalName} · ABN {company.abn}
+			</span>
+			<span>
+				{company.yardSuburb} · {company.coverage}
+			</span>
 		</footer>
 	);
 }
