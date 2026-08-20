@@ -619,7 +619,7 @@ export default async function Home() {
 						<i className="corner tr" style={{ color: "color-mix(in srgb, var(--color-bg) 70%, transparent)" }}></i>
 						<i className="corner bl" style={{ color: "color-mix(in srgb, var(--color-bg) 70%, transparent)" }}></i>
 						<i className="corner br" style={{ color: "color-mix(in srgb, var(--color-bg) 70%, transparent)" }}></i>
-						<QuoteForm phone={company.phone} />
+						<QuoteForm phone={company.phone} serviceTitles={services.map((s) => s.title)} />
 					</div>
 					<SiteFooter />
 				</div>

@@ -5,7 +5,7 @@ import { submitQuote, type QuoteFormState } from "./quote-actions";
 
 const initialState: QuoteFormState = { status: "idle", attempt: 0 };
 
-export default function QuoteForm({ phone }: { phone: string }) {
+export default function QuoteForm({ phone, serviceTitles }: { phone: string; serviceTitles: string[] }) {
 	const [state, formAction, isPending] = useActionState(submitQuote, initialState);
 	const values = state.status === "error" ? state.values : undefined;
 
@@ -74,9 +74,9 @@ export default function QuoteForm({ phone }: { phone: string }) {
 			<div className="field" style={{ gridColumn: "1 / -1" }}>
 				<label htmlFor="q-type">What do you need?</label>
 				<select className="input" id="q-type" name="type" defaultValue={values?.type}>
-					<option>Class A hoarding</option>
-					<option>Class B hoarding (gantry)</option>
-					<option>Design &amp; certification only</option>
+					{serviceTitles.map((title) => (
+						<option key={title}>{title}</option>
+					))}
 					<option>Not sure yet — advise me</option>
 				</select>
 			</div>
