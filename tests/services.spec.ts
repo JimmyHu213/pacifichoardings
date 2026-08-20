@@ -20,4 +20,12 @@ test.describe('D1-backed services', () => {
     const response = await page.goto('/services/council-permits');
     expect(response?.status()).toBe(404);
   });
+
+  test('services render in sort order across nav and quote form', async ({ page }) => {
+    await page.goto('/');
+    const options = page.locator('#q-type option');
+    await expect(options.nth(0)).toHaveText('Class A hoarding');
+    await expect(options.nth(1)).toHaveText('Class B hoarding');
+    await expect(options.nth(2)).toHaveText('Design & certification');
+  });
 });
