@@ -56,6 +56,9 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 		.slice(0, 6);
 	if (complianceTags.length === 0) return { status: "error", message: "Add at least one compliance tag." };
 
+	const sortOrder = Number.parseInt(field(formData, "sort_order", 10), 10);
+	if (Number.isNaN(sortOrder)) return { status: "error", message: "Sort order must be a number." };
+
 	// Photo slots: validate both before writing anything (mirrors about/actions.ts).
 	const uploads: { index: number; file: File }[] = [];
 	for (const index of [0, 1]) {
@@ -100,7 +103,7 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 
 		await env.DB.prepare(
 			`UPDATE services SET title = ?, tagline = ?, body = ?, overview = ?, when_you_need_it = ?,
-			 specs = ?, process = ?, compliance_tags = ?, images = ?, updated_at = ? WHERE slug = ?`,
+			 specs = ?, process = ?, compliance_tags = ?, images = ?, sort_order = ?, updated_at = ? WHERE slug = ?`,
 		)
 			.bind(
 				title,
@@ -112,6 +115,7 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 				JSON.stringify(process),
 				JSON.stringify(complianceTags),
 				JSON.stringify(images),
+				sortOrder,
 				now,
 				slug,
 			)

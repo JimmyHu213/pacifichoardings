@@ -25,12 +25,14 @@ function PhotoSlot({
 	altField,
 	currentKey,
 	currentAlt,
+	showUpload,
 }: {
 	label: string;
 	fileField: string;
 	altField: string;
 	currentKey: string | null;
 	currentAlt: string;
+	showUpload: boolean;
 }) {
 	return (
 		<fieldset style={{ border: "1px solid var(--color-divider)", padding: 16, display: "grid", gap: 12 }}>
@@ -41,10 +43,12 @@ function PhotoSlot({
 			) : (
 				<p style={{ margin: 0, fontSize: 13, color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>No photo yet — the site shows a placeholder frame.</p>
 			)}
-			<div className="field">
-				<label htmlFor={`s-${fileField}`}>{currentKey ? "Replace photo" : "Upload photo"} (JPEG/PNG/WEBP/AVIF/GIF, under 5MB)</label>
-				<input className="input" id={`s-${fileField}`} name={fileField} type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif" />
-			</div>
+			{showUpload && (
+				<div className="field">
+					<label htmlFor={`s-${fileField}`}>{currentKey ? "Replace photo" : "Upload photo"} (JPEG/PNG/WEBP/AVIF/GIF, under 5MB)</label>
+					<input className="input" id={`s-${fileField}`} name={fileField} type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif" />
+				</div>
+			)}
 			<div className="field">
 				<label htmlFor={`s-${altField}`}>Photo description (for screen readers)</label>
 				<input className="input" id={`s-${altField}`} name={altField} type="text" required defaultValue={currentAlt} />
@@ -53,7 +57,7 @@ function PhotoSlot({
 	);
 }
 
-export default function ServiceForm({ initial }: { initial?: ServiceFormValues }) {
+export default function ServiceForm({ initial, defaultSortOrder }: { initial?: ServiceFormValues; defaultSortOrder?: number }) {
 	const isEdit = Boolean(initial);
 	const [state, formAction, isPending] = useActionState(isEdit ? saveServiceAction : createServiceAction, initialState);
 
@@ -86,7 +90,7 @@ export default function ServiceForm({ initial }: { initial?: ServiceFormValues }
 			</div>
 			<div className="field" style={{ maxWidth: 160 }}>
 				<label htmlFor="s-sort">Sort order</label>
-				<input className="input" id="s-sort" name="sort_order" type="number" required defaultValue={initial?.sortOrder ?? 0} />
+				<input className="input" id="s-sort" name="sort_order" type="number" required defaultValue={initial?.sortOrder ?? defaultSortOrder ?? 0} />
 			</div>
 			<div className="field">
 				<label htmlFor="s-title">Title</label>
@@ -142,8 +146,8 @@ export default function ServiceForm({ initial }: { initial?: ServiceFormValues }
 				<label htmlFor="s-compliance-tags">Compliance tags — one per line, up to 6</label>
 				<textarea className="input" id="s-compliance-tags" name="compliance_tags" required rows={4} defaultValue={initial?.complianceTags.join("\n")} />
 			</div>
-			<PhotoSlot label="Photo 1 (top of page)" fileField="photo_0" altField="image_alt_0" currentKey={initial?.images[0]?.key ?? null} currentAlt={initial?.images[0]?.alt ?? ""} />
-			<PhotoSlot label="Photo 2 (compliance section)" fileField="photo_1" altField="image_alt_1" currentKey={initial?.images[1]?.key ?? null} currentAlt={initial?.images[1]?.alt ?? ""} />
+			<PhotoSlot label="Photo 1 (top of page)" fileField="photo_0" altField="image_alt_0" currentKey={initial?.images[0]?.key ?? null} currentAlt={initial?.images[0]?.alt ?? ""} showUpload={isEdit} />
+			<PhotoSlot label="Photo 2 (compliance section)" fileField="photo_1" altField="image_alt_1" currentKey={initial?.images[1]?.key ?? null} currentAlt={initial?.images[1]?.alt ?? ""} showUpload={isEdit} />
 			<div>
 				<button type="submit" className="btn btn-primary" style={{ minHeight: 40, paddingInline: 22 }} disabled={isPending}>
 					{isPending ? "Saving…" : isEdit ? "Save service" : "Create service"}
