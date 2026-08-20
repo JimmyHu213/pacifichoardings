@@ -4,6 +4,7 @@
 // services stay in static TS — see the plan for why. See .planning/DEV-PLAN.md §4
 // for the original design note.
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { cache } from "react";
 import { services } from "./static/services";
 import {
 	aboutContentFallback,
@@ -169,7 +170,7 @@ export async function getProjects(): Promise<Project[]> {
 	}
 }
 
-export async function getProject(slug: string): Promise<Project | null> {
+export const getProject = cache(async (slug: string): Promise<Project | null> => {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
 		const row = await env.DB.prepare(
@@ -188,7 +189,7 @@ export async function getProject(slug: string): Promise<Project | null> {
 		console.error("Failed to load project from D1", error);
 		return null;
 	}
-}
+});
 
 export async function getTestimonials(): Promise<Testimonial[]> {
 	try {

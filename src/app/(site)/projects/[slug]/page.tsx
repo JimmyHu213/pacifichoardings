@@ -8,6 +8,11 @@ import ScrollReveal from "@/components/scroll-reveal";
 import { getProject, getServices } from "@/lib/content";
 import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
 
+// The (site) layout already forces dynamic rendering, but declare it here
+// too so this page can never silently regress to cached galleries if the
+// layout config narrows.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
 	const { slug } = await params;
 	const project = await getProject(slug);

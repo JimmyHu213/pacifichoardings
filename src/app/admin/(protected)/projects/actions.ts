@@ -77,6 +77,8 @@ export async function addProjectPhotoAction(_prevState: PhotoFormState, formData
 	const projectId = field(formData, "project_id", 20);
 	const imageAlt = field(formData, "image_alt", 300);
 	const image = formData.get("image");
+	const width = Number.parseInt(field(formData, "width", 10), 10);
+	const height = Number.parseInt(field(formData, "height", 10), 10);
 
 	if (!projectId) return { status: "error", message: "Missing project." };
 	if (!(image instanceof File) || image.size === 0) return { status: "error", message: "Choose a photo to upload." };
@@ -96,10 +98,18 @@ export async function addProjectPhotoAction(_prevState: PhotoFormState, formData
 
 	try {
 		await env.DB.prepare(
-			`INSERT INTO project_images (project_id, image_key, image_alt, sort_order, created_at)
-			 VALUES (?, ?, ?, COALESCE((SELECT MAX(sort_order) + 1 FROM project_images WHERE project_id = ?), 0), ?)`,
+			`INSERT INTO project_images (project_id, image_key, image_alt, width, height, sort_order, created_at)
+			 VALUES (?, ?, ?, ?, ?, COALESCE((SELECT MAX(sort_order) + 1 FROM project_images WHERE project_id = ?), 0), ?)`,
 		)
-			.bind(projectId, imageKey, imageAlt || null, projectId, new Date().toISOString())
+			.bind(
+				projectId,
+				imageKey,
+				imageAlt || null,
+				Number.isFinite(width) && width > 0 ? width : null,
+				Number.isFinite(height) && height > 0 ? height : null,
+				projectId,
+				new Date().toISOString(),
+			)
 			.run();
 	} catch (error) {
 		// A failed write must not leave the fresh upload orphaned in R2.

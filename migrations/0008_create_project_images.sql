@@ -17,7 +17,8 @@ CREATE INDEX IF NOT EXISTS idx_project_images_project ON project_images(project_
 INSERT INTO project_images (project_id, image_key, image_alt, width, height, sort_order, created_at)
 SELECT id, image_key, image_alt, image_width, image_height, 0, updated_at
 FROM projects
-WHERE image_key IS NOT NULL;
+WHERE image_key IS NOT NULL
+	AND NOT EXISTS (SELECT 1 FROM project_images);
 
 ALTER TABLE projects DROP COLUMN image_key;
 ALTER TABLE projects DROP COLUMN image_alt;

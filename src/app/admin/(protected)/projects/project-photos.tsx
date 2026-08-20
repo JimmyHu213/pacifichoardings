@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
 	addProjectPhotoAction,
 	deleteProjectPhotoAction,
@@ -19,6 +19,24 @@ export interface ProjectPhotoValues {
 
 export default function ProjectPhotos({ projectId, photos }: { projectId: string; photos: ProjectPhotoValues[] }) {
 	const [state, addAction, isPending] = useActionState(addProjectPhotoAction, initialState);
+	const [dims, setDims] = useState<{ width: number; height: number } | null>(null);
+
+	async function onFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+		const file = event.target.files?.[0];
+		if (!file) {
+			setDims(null);
+			return;
+		}
+		try {
+			// Decode locally to record the photo's native size, so the public
+			// gallery can render it at its own aspect ratio instead of 4:3.
+			const bitmap = await createImageBitmap(file);
+			setDims({ width: bitmap.width, height: bitmap.height });
+			bitmap.close();
+		} catch {
+			setDims(null);
+		}
+	}
 
 	return (
 		<section style={{ marginTop: 40, maxWidth: 760 }}>
@@ -76,12 +94,14 @@ export default function ProjectPhotos({ projectId, photos }: { projectId: string
 				<input type="hidden" name="project_id" value={projectId} />
 				<div className="field" style={{ flex: "1 1 200px" }}>
 					<label htmlFor="photo-new">Add photo</label>
-					<input className="input" id="photo-new" name="image" type="file" accept="image/*" required />
+					<input className="input" id="photo-new" name="image" type="file" accept="image/*" required onChange={onFileChange} />
 				</div>
 				<div className="field" style={{ flex: "1 1 200px" }}>
 					<label htmlFor="photo-new-alt">Alt text</label>
 					<input className="input" id="photo-new-alt" name="image_alt" type="text" />
 				</div>
+				<input type="hidden" name="width" value={dims?.width ?? ""} />
+				<input type="hidden" name="height" value={dims?.height ?? ""} />
 				<button type="submit" className="btn btn-primary" style={{ minHeight: 38 }} disabled={isPending}>
 					{isPending ? "Uploading…" : "Upload"}
 				</button>
