@@ -22,7 +22,9 @@ interface ProjectListRow {
 export default async function AdminProjectsPage() {
 	const { env } = await getCloudflareContext({ async: true });
 	const { results } = await env.DB.prepare(
-		"SELECT id, slug, title, service_slug, timeframe, image_key, sort_order FROM projects ORDER BY sort_order, id",
+		`SELECT p.id, p.slug, p.title, p.service_slug, p.timeframe, p.sort_order,
+			(SELECT pi.image_key FROM project_images pi WHERE pi.project_id = p.id ORDER BY pi.sort_order, pi.id LIMIT 1) AS image_key
+		 FROM projects p ORDER BY p.sort_order, p.id`,
 	).all<ProjectListRow>();
 	const serviceTitleBySlug = new Map(services.map((s) => [s.slug, s.title]));
 
