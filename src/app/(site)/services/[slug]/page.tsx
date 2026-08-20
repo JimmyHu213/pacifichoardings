@@ -89,7 +89,16 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 					}}
 				>
 					<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-						<ImageSlot placeholder={service.images[0].placeholder} label={service.images[0].label} />
+						{service.images[0]?.key ? (
+							// eslint-disable-next-line @next/next/no-img-element -- R2 photos are served unoptimised by design (see /media route)
+							<img
+								src={`/media/${service.images[0].key}`}
+								alt={service.images[0].alt}
+								style={{ display: "block", width: "100%", height: "auto" }}
+							/>
+						) : (
+							<ImageSlot placeholder={`Drop a photo — ${service.images[0]?.alt ?? service.title}`} label={service.images[0]?.alt} />
+						)}
 						<Corners />
 					</figure>
 					<div>
@@ -188,7 +197,16 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 					}}
 				>
 					<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-						<ImageSlot placeholder={service.images[1].placeholder} label={service.images[1].label} />
+						{service.images[1]?.key ? (
+							// eslint-disable-next-line @next/next/no-img-element -- R2 photos are served unoptimised by design (see /media route)
+							<img
+								src={`/media/${service.images[1].key}`}
+								alt={service.images[1].alt}
+								style={{ display: "block", width: "100%", height: "auto" }}
+							/>
+						) : (
+							<ImageSlot placeholder={`Drop a photo — ${service.images[1]?.alt ?? service.title}`} label={service.images[1]?.alt} />
+						)}
 						<Corners />
 					</figure>
 					<div>

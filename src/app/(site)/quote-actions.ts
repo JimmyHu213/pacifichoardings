@@ -1,6 +1,7 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getServices } from "@/lib/content";
 
 export interface QuoteFormValues {
 	name: string;
@@ -21,14 +22,9 @@ export type QuoteFormState =
 	| { status: "success"; attempt: number }
 	| { status: "error"; message: string; attempt: number; values: QuoteFormValues };
 
-// Matches the <option> text values in quote-form.tsx exactly (the <select>
+// Matches the fallback <option> text in quote-form.tsx exactly (the <select>
 // has no explicit value= attrs, so the option value is its text content).
-const QUOTE_TYPES = [
-	"Class A hoarding",
-	"Class B hoarding (gantry)",
-	"Design & certification only",
-	"Not sure yet — advise me",
-];
+const NOT_SURE_OPTION = "Not sure yet — advise me";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -59,7 +55,8 @@ export async function submitQuote(prevState: QuoteFormState, formData: FormData)
 		return { status: "error", message: "Add the site address or suburb.", attempt, values };
 	}
 
-	const need = QUOTE_TYPES.includes(values.type) ? values.type : null;
+	const serviceTitles = (await getServices()).map((s) => s.title);
+	const need = serviceTitles.includes(values.type) || values.type === NOT_SURE_OPTION ? values.type : null;
 
 	try {
 		// Sync mode is rejected by OpenNext whenever the calling route could be
