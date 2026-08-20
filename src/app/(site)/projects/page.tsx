@@ -54,7 +54,7 @@ export default async function ProjectsPage() {
 									</span>
 									<div className="ph-proj-media">
 										<figure className="blueprint duotone" style={{ margin: 0 }}>
-											<ProjectImage image={project.image} />
+											<ProjectImage image={project.cover} />
 											<Corners />
 										</figure>
 									</div>

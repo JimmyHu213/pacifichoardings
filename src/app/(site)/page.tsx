@@ -64,8 +64,8 @@ function ProjectRail({ projects, hidden }: { projects: Project[]; hidden?: boole
 			{projects.map((p) => (
 				<figure key={p.id} style={{ margin: 0, flex: "none", width: "clamp(300px, 32vw, 440px)" }}>
 					<div className="blueprint duotone">
-						{p.image.key ? (
-							<ProjectImage image={hidden ? { ...p.image, label: "" } : p.image} variant="rail" />
+						{p.cover.key ? (
+							<ProjectImage image={hidden ? { ...p.cover, label: "" } : p.cover} variant="rail" />
 						) : (
 							<ImageSlot placeholder="Drop a project photo" label={hidden ? undefined : "Project photograph"} />
 						)}
