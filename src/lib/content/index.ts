@@ -123,7 +123,7 @@ interface ServiceRow {
 	images: string;
 }
 
-export async function getServices(): Promise<Service[]> {
+export const getServices = cache(async (): Promise<Service[]> => {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
 		const { results } = await env.DB.prepare(
@@ -150,7 +150,7 @@ export async function getServices(): Promise<Service[]> {
 		console.error("Failed to load services from D1", error);
 		return services;
 	}
-}
+});
 
 interface ProjectRow {
 	id: number;

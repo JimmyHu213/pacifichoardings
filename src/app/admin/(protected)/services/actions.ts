@@ -71,9 +71,15 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 	const { env } = await getCloudflareContext({ async: true });
 	const now = new Date().toISOString();
 
-	const existing = await env.DB.prepare("SELECT images FROM services WHERE slug = ?").bind(slug).first<{ images: string }>();
-	if (!existing) return { status: "error", message: "That service isn't in the database yet — apply the migration first." };
-	const images = (JSON.parse(existing.images) as { key: string; alt: string }[]).map((img, i) => ({ key: img.key, alt: alts[i] }));
+	let images: { key: string; alt: string }[];
+	try {
+		const existing = await env.DB.prepare("SELECT images FROM services WHERE slug = ?").bind(slug).first<{ images: string }>();
+		if (!existing) return { status: "error", message: "That service isn't in the database yet — apply the migration first." };
+		images = (JSON.parse(existing.images) as { key: string; alt: string }[]).map((img, i) => ({ key: img.key, alt: alts[i] }));
+	} catch (error) {
+		console.error("Service pre-flight read failed", error);
+		return { status: "error", message: "That service isn't in the database yet — apply the migration first." };
+	}
 
 	// Fresh timestamped keys (never reused); old objects removed only after the
 	// D1 write commits; a failed write deletes the fresh uploads.
