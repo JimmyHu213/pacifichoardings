@@ -13,8 +13,6 @@ export interface ProjectFormValues {
 	serviceSlug: string;
 	timeframe: string;
 	description: string;
-	imageKey: string | null;
-	imageAlt: string;
 	sortOrder: number;
 }
 
@@ -87,19 +85,6 @@ export default function ProjectForm({
 			<div className="field" style={{ gridColumn: "1 / -1" }}>
 				<label htmlFor="p-description">Description</label>
 				<textarea className="input" id="p-description" name="description" required rows={4} defaultValue={initial?.description} />
-			</div>
-			<div className="field">
-				<label htmlFor="p-image">{initial?.imageKey ? "Replace photo" : "Photo"}</label>
-				<input className="input" id="p-image" name="image" type="file" accept="image/*" />
-				{initial?.imageKey && (
-					<span style={{ display: "block", fontSize: 12, marginTop: 6, color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>
-						Current: {initial.imageKey}
-					</span>
-				)}
-			</div>
-			<div className="field">
-				<label htmlFor="p-image-alt">Photo alt text</label>
-				<input className="input" id="p-image-alt" name="image_alt" type="text" defaultValue={initial?.imageAlt} />
 			</div>
 			<div className="field">
 				<label htmlFor="p-sort">Sort order</label>
