@@ -10,13 +10,14 @@ import {
 	aboutContentFallback,
 	clientsFallback,
 	companyInfoFallback,
+	complianceContentFallback,
 	complianceTagsFallback,
 	statsFallback,
 	testimonialsFallback,
 } from "./fallbacks";
-import type { AboutContent, CompanyInfo, ComplianceTag, Faq, Project, Service, Stat, Testimonial } from "./types";
+import type { AboutContent, CompanyInfo, ComplianceCard, ComplianceContent, ComplianceTag, Faq, Project, Service, Stat, Testimonial } from "./types";
 
-export type { Stat, Service, ServiceImageSlot, Project, ProjectImage, Testimonial, Faq, CompanyInfo, AboutContent, ComplianceTag } from "./types";
+export type { Stat, Service, ServiceImageSlot, Project, ProjectImage, Testimonial, Faq, CompanyInfo, AboutContent, ComplianceTag, ComplianceCard, ComplianceContent } from "./types";
 
 // Settings reads are prefix-scoped so company and about fetches stay cheap.
 async function getSiteSettings(prefix: string): Promise<Map<string, string>> {
@@ -258,5 +259,38 @@ export async function getFaqs(): Promise<Faq[]> {
 	} catch (error) {
 		console.error("Failed to load FAQs from D1", error);
 		return [];
+	}
+}
+
+export async function getComplianceContent(): Promise<ComplianceContent> {
+	try {
+		const s = await getSiteSettings("compliance");
+		const parseCards = (value: string | undefined, fallback: ComplianceCard[]): ComplianceCard[] => {
+			if (!value) return fallback;
+			try {
+				return JSON.parse(value) as ComplianceCard[];
+			} catch {
+				return fallback;
+			}
+		};
+		if (s.size === 0) return complianceContentFallback;
+		return {
+			headline: s.get("compliance.headline") ?? complianceContentFallback.headline,
+			intro: s.get("compliance.intro") ?? complianceContentFallback.intro,
+			standardsBody: s.get("compliance.standards_body") ?? complianceContentFallback.standardsBody,
+			standardsCards: parseCards(s.get("compliance.standards_cards"), complianceContentFallback.standardsCards),
+			permitsBody: s.get("compliance.permits_body") ?? complianceContentFallback.permitsBody,
+			safeworkBody: s.get("compliance.safework_body") ?? complianceContentFallback.safeworkBody,
+			insuranceBody: s.get("compliance.insurance_body") ?? complianceContentFallback.insuranceBody,
+			handoverBody: s.get("compliance.handover_body") ?? complianceContentFallback.handoverBody,
+			handoverCards: parseCards(s.get("compliance.handover_cards"), complianceContentFallback.handoverCards),
+			permitImageKey: s.get("compliance.permit_image") ?? null,
+			permitImageAlt: s.get("compliance.permit_image_alt") ?? complianceContentFallback.permitImageAlt,
+			crewImageKey: s.get("compliance.crew_image") ?? null,
+			crewImageAlt: s.get("compliance.crew_image_alt") ?? complianceContentFallback.crewImageAlt,
+		};
+	} catch (error) {
+		console.error("Failed to load compliance content from D1", error);
+		return complianceContentFallback;
 	}
 }

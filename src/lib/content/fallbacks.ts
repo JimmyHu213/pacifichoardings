@@ -2,7 +2,7 @@
 // the getters log and return these, so an outage can never blank the header,
 // footer or about page. Keep values in sync with migration 0007's seeds —
 // they ARE those seeds, frozen at cutover.
-import type { AboutContent, CompanyInfo, ComplianceTag, Stat, Testimonial } from "./types";
+import type { AboutContent, CompanyInfo, ComplianceContent, ComplianceTag, Stat, Testimonial } from "./types";
 
 export const companyInfoFallback: CompanyInfo = {
 	phone: "1300 722 477",
@@ -64,3 +64,30 @@ export const testimonialsFallback: Testimonial[] = [
 		source: "— Development director, North Sydney",
 	},
 ];
+
+// Compliance content fallback synced with migration 0010's seeds.
+export const complianceContentFallback: ComplianceContent = {
+	headline: "Compliant is the minimum",
+	intro: "Every hoarding we put up is designed, certified and permitted before the first panel goes up. This is what that actually means — the standard we build to, the approvals council asks for, and what lands in your inbox when the job's done.",
+	standardsBody: "Class A fencing and hoardings are built to AS 4687, the Australian Standard for temporary fencing and hoardings. Class B overhead decks are a different animal — they're engineered to AS/NZS 1170 load cases under the SafeWork NSW Overhead Protective Structures Code of Practice. Either way, the engineering is done from the first drawing, not retrofitted with paperwork once the structure's already standing.",
+	standardsCards: [
+		{ label: "Drawings", detail: "General arrangement drawings for the specific site and hoarding type" },
+		{ label: "Load cases", detail: "Wind, live and dead loads calculated for the site's actual conditions" },
+		{ label: "Tie-downs", detail: "Footing and tie-down details engineered to the ground conditions on site" },
+		{ label: "Sign-off", detail: "Signed and stamped by our structural engineer before the permit is lodged" },
+	],
+	permitsBody: "Any hoarding standing on or over public land — a footpath, road reserve or laneway — needs council consent under section 138 of the Roads Act 1993 before it goes up. Three approvals usually travel together: the hoarding permit itself, footpath occupation where the hoarding or gantry extends over council land, and a traffic control plan wherever pedestrians or vehicles need to be managed around it. We prepare and lodge all three, and stay the point of contact if council comes back with questions.",
+	safeworkBody: "Every install runs under a Safe Work Method Statement to SafeWork NSW's requirements, and every installer on our crew holds the licence the job calls for — high-risk construction work licensing included. That's not a certificate kept in a drawer; it's what the crew is actually working to on site.",
+	insuranceBody: "We carry $20M public liability cover on every job, and can supply a certificate of currency before you need one — for your principal contractor agreement, your PC's file, or your own insurer.",
+	handoverBody: "Every job hands back the same paper trail — nothing you have to chase after the crew's left site.",
+	handoverCards: [
+		{ label: "Engineering drawings", detail: "Signed general arrangement and load case drawings" },
+		{ label: "Permit approvals", detail: "Copies of the hoarding, footpath and traffic control approvals" },
+		{ label: "Insurance certificate", detail: "Certificate of currency for our $20M public liability cover" },
+		{ label: "Compliance sign-off", detail: "Written confirmation the install matches the certified drawings" },
+	],
+	permitImageKey: null,
+	permitImageAlt: "Approved hoarding permit signage on site",
+	crewImageKey: null,
+	crewImageAlt: "Pacific Hoardings crew on site in full PPE",
+};

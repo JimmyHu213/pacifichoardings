@@ -100,3 +100,24 @@ export interface ComplianceTag {
 	label: string;
 	accent: boolean;
 }
+
+export interface ComplianceCard {
+	label: string;
+	detail: string;
+}
+
+export interface ComplianceContent {
+	headline: string;
+	intro: string;
+	standardsBody: string;
+	standardsCards: ComplianceCard[];
+	permitsBody: string;
+	safeworkBody: string;
+	insuranceBody: string;
+	handoverBody: string;
+	handoverCards: ComplianceCard[];
+	permitImageKey: string | null;
+	permitImageAlt: string;
+	crewImageKey: string | null;
+	crewImageAlt: string;
+}
