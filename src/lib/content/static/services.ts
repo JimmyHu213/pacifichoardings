@@ -85,32 +85,4 @@ export const services: Service[] = [
 		],
 		faqIds: ["certification", "class-a-vs-class-b"],
 	},
-	{
-		slug: "council-permits",
-		title: "Council permits",
-		body: "We draw it, certify it and lodge it — hoarding permits, footpath occupation and traffic control plans. You build; we handle the paperwork.",
-		tagline: "We draw it, certify it, lodge it — you keep building.",
-		overview:
-			"Hoarding permits, footpath occupation approvals and traffic control plans — we handle the whole council pathway so your program doesn't stall waiting on paperwork. Drawings, certification and the application itself are prepared and lodged by us, with a single point of contact if the council comes back with questions.",
-		whenYouNeedIt:
-			"Any hoarding standing on or over public land — a footpath, road reserve or laneway — needs a council permit before it goes up. If you're managing the permit yourself and it's holding up your start date, this is where we take it off your plate.",
-		specs: [
-			{ label: "Scope", detail: "Hoarding permit, footpath occupation and traffic control plan applications" },
-			{ label: "Council liaison", detail: "We lodge and respond to council queries directly" },
-			{ label: "Documentation", detail: "Certified drawings and insurance certificates included with the application" },
-			{ label: "Timeline", detail: "Lodged as soon as drawings are signed — no waiting on us to start the clock" },
-		],
-		process: [
-			{ step: "Site assessment", detail: "We confirm what approvals your specific footpath and site need." },
-			{ step: "Application prepared", detail: "Drawings, certification and forms assembled for lodgement." },
-			{ step: "Lodged with council", detail: "Application submitted and tracked until approved." },
-			{ step: "Approval handed over", detail: "You get the permit; we're ready to install the day it clears." },
-		],
-		complianceTags: ["Council-ready documentation", "AS 4687 certified"],
-		images: [
-			{ key: null, alt: "Council permit documentation" },
-			{ key: null, alt: "Permitted hoarding on public footpath" },
-		],
-		faqIds: ["council-approval"],
-	},
 ];
