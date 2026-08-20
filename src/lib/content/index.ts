@@ -10,13 +10,14 @@ import {
 	aboutContentFallback,
 	clientsFallback,
 	companyInfoFallback,
+	complianceContentFallback,
 	complianceTagsFallback,
 	statsFallback,
 	testimonialsFallback,
 } from "./fallbacks";
-import type { AboutContent, CompanyInfo, ComplianceTag, Faq, Project, Service, Stat, Testimonial } from "./types";
+import type { AboutContent, CompanyInfo, ComplianceCard, ComplianceContent, ComplianceTag, Faq, Project, Service, ServiceProcessStep, ServiceSpec, Stat, Testimonial } from "./types";
 
-export type { Stat, Service, ServiceImageSlot, Project, ProjectImage, Testimonial, Faq, CompanyInfo, AboutContent, ComplianceTag } from "./types";
+export type { Stat, Service, ServiceImageSlot, Project, ProjectImage, Testimonial, Faq, CompanyInfo, AboutContent, ComplianceTag, ComplianceCard, ComplianceContent } from "./types";
 
 // Settings reads are prefix-scoped so company and about fetches stay cheap.
 async function getSiteSettings(prefix: string): Promise<Map<string, string>> {
@@ -123,6 +124,17 @@ interface ServiceRow {
 	images: string;
 }
 
+// A hand-edited JSON column that parses to a non-array would crash the page
+// outside this getter's catch — fall back to an empty list instead.
+function parseJsonArray<T>(value: string): T[] {
+	try {
+		const parsed = JSON.parse(value);
+		return Array.isArray(parsed) ? (parsed as T[]) : [];
+	} catch {
+		return [];
+	}
+}
+
 export const getServices = cache(async (): Promise<Service[]> => {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
@@ -137,11 +149,11 @@ export const getServices = cache(async (): Promise<Service[]> => {
 			tagline: row.tagline,
 			overview: row.overview,
 			whenYouNeedIt: row.when_you_need_it,
-			specs: JSON.parse(row.specs),
-			process: JSON.parse(row.process),
-			complianceTags: JSON.parse(row.compliance_tags),
-			faqIds: JSON.parse(row.faq_ids),
-			images: (JSON.parse(row.images) as { key: string; alt: string }[]).map((img) => ({
+			specs: parseJsonArray<ServiceSpec>(row.specs),
+			process: parseJsonArray<ServiceProcessStep>(row.process),
+			complianceTags: parseJsonArray<string>(row.compliance_tags),
+			faqIds: parseJsonArray<string>(row.faq_ids),
+			images: parseJsonArray<{ key: string; alt: string }>(row.images).map((img) => ({
 				key: img.key || null,
 				alt: img.alt,
 			})),
@@ -258,5 +270,39 @@ export async function getFaqs(): Promise<Faq[]> {
 	} catch (error) {
 		console.error("Failed to load FAQs from D1", error);
 		return [];
+	}
+}
+
+export async function getComplianceContent(): Promise<ComplianceContent> {
+	try {
+		const s = await getSiteSettings("compliance");
+		const parseCards = (value: string | undefined, fallback: ComplianceCard[]): ComplianceCard[] => {
+			if (!value) return fallback;
+			try {
+				const parsed = JSON.parse(value);
+				return Array.isArray(parsed) ? (parsed as ComplianceCard[]) : fallback;
+			} catch {
+				return fallback;
+			}
+		};
+		if (s.size === 0) return complianceContentFallback;
+		return {
+			headline: s.get("compliance.headline") ?? complianceContentFallback.headline,
+			intro: s.get("compliance.intro") ?? complianceContentFallback.intro,
+			standardsBody: s.get("compliance.standards_body") ?? complianceContentFallback.standardsBody,
+			standardsCards: parseCards(s.get("compliance.standards_cards"), complianceContentFallback.standardsCards),
+			permitsBody: s.get("compliance.permits_body") ?? complianceContentFallback.permitsBody,
+			safeworkBody: s.get("compliance.safework_body") ?? complianceContentFallback.safeworkBody,
+			insuranceBody: s.get("compliance.insurance_body") ?? complianceContentFallback.insuranceBody,
+			handoverBody: s.get("compliance.handover_body") ?? complianceContentFallback.handoverBody,
+			handoverCards: parseCards(s.get("compliance.handover_cards"), complianceContentFallback.handoverCards),
+			permitImageKey: s.get("compliance.permit_image") ?? null,
+			permitImageAlt: s.get("compliance.permit_image_alt") ?? complianceContentFallback.permitImageAlt,
+			crewImageKey: s.get("compliance.crew_image") ?? null,
+			crewImageAlt: s.get("compliance.crew_image_alt") ?? complianceContentFallback.crewImageAlt,
+		};
+	} catch (error) {
+		console.error("Failed to load compliance content from D1", error);
+		return complianceContentFallback;
 	}
 }

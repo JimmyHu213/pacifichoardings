@@ -3,7 +3,7 @@ import Corners from "@/components/corners";
 import ImageSlot from "@/components/image-slot";
 import QuoteCta from "@/components/quote-cta";
 import ScrollReveal from "@/components/scroll-reveal";
-import { getFaqs } from "@/lib/content";
+import { getComplianceContent, getComplianceTags, getFaqs } from "@/lib/content";
 import { bodyCopy, kicker, kickerRule, pageGutter, sectionTitle } from "@/lib/style-tokens";
 
 export const metadata: Metadata = {
@@ -11,26 +11,12 @@ export const metadata: Metadata = {
 	description: "Hoardings engineered to AS 4687 and AS/NZS 1170, council permits under the Roads Act, SafeWork NSW compliance and $20M public liability — what's behind every hoarding we put up.",
 };
 
-// getFaqs() reads D1 — see the note in (site)/page.tsx for why this has to
-// be explicit.
+// getFaqs(), getComplianceContent(), and getComplianceTags() read D1 — see the
+// note in (site)/page.tsx for why this has to be explicit.
 export const dynamic = "force-dynamic";
 
-const asSpecs = [
-	{ label: "Drawings", detail: "General arrangement drawings for the specific site and hoarding type" },
-	{ label: "Load cases", detail: "Wind, live and dead loads calculated for the site's actual conditions" },
-	{ label: "Tie-downs", detail: "Footing and tie-down details engineered to the ground conditions on site" },
-	{ label: "Sign-off", detail: "Signed and stamped by our structural engineer before the permit is lodged" },
-];
-
-const handoverSpecs = [
-	{ label: "Engineering drawings", detail: "Signed general arrangement and load case drawings" },
-	{ label: "Permit approvals", detail: "Copies of the hoarding, footpath and traffic control approvals" },
-	{ label: "Insurance certificate", detail: "Certificate of currency for our $20M public liability cover" },
-	{ label: "Compliance sign-off", detail: "Written confirmation the install matches the certified drawings" },
-];
-
 export default async function CompliancePage() {
-	const faqs = await getFaqs();
+	const [faqs, content, tags] = await Promise.all([getFaqs(), getComplianceContent(), getComplianceTags()]);
 	const complianceFaqs = faqs.filter((f) => f.id === "council-approval" || f.id === "certification");
 
 	return (
@@ -42,15 +28,13 @@ export default async function CompliancePage() {
 					<span style={kicker}>Compliance</span>
 					<hr style={kickerRule} />
 					<h1 className="ph-reveal" style={{ ...sectionTitle, fontSize: "clamp(36px, 4.4vw, 60px)", margin: "0 0 16px" }}>
-						Compliant is the minimum
+						{content.headline}
 					</h1>
 					<p
 						className="ph-reveal"
 						style={{ fontSize: 18, lineHeight: "28px", maxWidth: "56ch", margin: 0, color: "color-mix(in srgb, var(--color-text) 78%, transparent)" }}
 					>
-						Every hoarding we put up is designed, certified and permitted before the first panel goes up. This is what that
-						actually means — the standard we build to, the approvals council asks for, and what lands in your inbox when the
-						job&rsquo;s done.
+						{content.intro}
 					</p>
 				</section>
 
@@ -58,13 +42,10 @@ export default async function CompliancePage() {
 					<span style={kicker}>Engineered to standard</span>
 					<hr style={kickerRule} />
 					<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "64ch", marginBottom: 32 }}>
-						Class A fencing and hoardings are built to AS 4687, the Australian Standard for temporary fencing and hoardings.
-						Class B overhead decks are a different animal — they&rsquo;re engineered to AS/NZS 1170 load cases under the SafeWork
-						NSW Overhead Protective Structures Code of Practice. Either way, the engineering is done from the first drawing, not
-						retrofitted with paperwork once the structure&rsquo;s already standing.
+						{content.standardsBody}
 					</p>
 					<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "clamp(20px, 3vw, 32px)" }}>
-						{asSpecs.map((spec) => (
+						{content.standardsCards.map((spec) => (
 							<div key={spec.label} className="blueprint ph-reveal ph-svc" style={{ padding: 20 }}>
 								<Corners />
 								<strong
@@ -98,15 +79,20 @@ export default async function CompliancePage() {
 						<span style={kicker}>Council permits & traffic control</span>
 						<hr style={kickerRule} />
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							Any hoarding standing on or over public land — a footpath, road reserve or laneway — needs council consent under
-							section 138 of the Roads Act 1993 before it goes up. Three approvals usually travel together: the hoarding permit
-							itself, footpath occupation where the hoarding or gantry extends over council land, and a traffic control plan
-							wherever pedestrians or vehicles need to be managed around it. We prepare and lodge all three, and stay the point
-							of contact if council comes back with questions.
+							{content.permitsBody}
 						</p>
 					</div>
 					<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-						<ImageSlot placeholder="Drop a photo — hoarding permit signage on site" label="Approved hoarding permit signage on site" />
+						{content.permitImageKey ? (
+							// eslint-disable-next-line @next/next/no-img-element -- R2 photos are served unoptimised by design (see /media route)
+							<img
+								src={`/media/${content.permitImageKey}`}
+								alt={content.permitImageAlt}
+								style={{ display: "block", width: "100%", height: "auto" }}
+							/>
+						) : (
+							<ImageSlot placeholder="Drop a photo — hoarding permit signage on site" label={content.permitImageAlt} />
+						)}
 						<Corners />
 					</figure>
 				</section>
@@ -124,19 +110,25 @@ export default async function CompliancePage() {
 						<span style={kicker}>SafeWork NSW</span>
 						<hr style={kickerRule} />
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							Every install runs under a Safe Work Method Statement to SafeWork NSW&rsquo;s requirements, and every installer
-							on our crew holds the licence the job calls for — high-risk construction work licensing included. That&rsquo;s
-							not a certificate kept in a drawer; it&rsquo;s what the crew is actually working to on site.
+							{content.safeworkBody}
 						</p>
 						<span style={{ ...kicker, marginTop: 28 }}>Insurance</span>
 						<hr style={kickerRule} />
 						<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "48ch" }}>
-							We carry $20M public liability cover on every job, and can supply a certificate of currency before you need
-							one — for your principal contractor agreement, your PC&rsquo;s file, or your own insurer.
+							{content.insuranceBody}
 						</p>
 					</div>
 					<figure className="blueprint ph-reveal duotone" style={{ margin: 0 }}>
-						<ImageSlot placeholder="Drop a photo — crew on site in PPE" label="Pacific Hoardings crew on site in full PPE" />
+						{content.crewImageKey ? (
+							// eslint-disable-next-line @next/next/no-img-element -- R2 photos are served unoptimised by design (see /media route)
+							<img
+								src={`/media/${content.crewImageKey}`}
+								alt={content.crewImageAlt}
+								style={{ display: "block", width: "100%", height: "auto" }}
+							/>
+						) : (
+							<ImageSlot placeholder="Drop a photo — crew on site in PPE" label={content.crewImageAlt} />
+						)}
 						<Corners />
 					</figure>
 				</section>
@@ -145,10 +137,10 @@ export default async function CompliancePage() {
 					<span style={kicker}>What you get</span>
 					<hr style={kickerRule} />
 					<p className="ph-reveal" style={{ ...bodyCopy, maxWidth: "64ch", marginBottom: 32 }}>
-						Every job hands back the same paper trail — nothing you have to chase after the crew&rsquo;s left site.
+						{content.handoverBody}
 					</p>
 					<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "clamp(20px, 3vw, 32px)" }}>
-						{handoverSpecs.map((spec) => (
+						{content.handoverCards.map((spec) => (
 							<div key={spec.label} className="blueprint ph-reveal ph-svc" style={{ padding: 20 }}>
 								<Corners />
 								<strong
@@ -173,10 +165,11 @@ export default async function CompliancePage() {
 					<span style={kicker}>Compliance</span>
 					<hr style={kickerRule} />
 					<div className="ph-reveal" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-						<span className="tag tag-accent">AS 4687 certified</span>
-						<span className="tag tag-outline">SafeWork NSW compliant</span>
-						<span className="tag tag-outline">$20M public liability</span>
-						<span className="tag tag-outline">Licensed installers</span>
+						{tags.map((tag) => (
+							<span key={tag.id} className={tag.accent ? "tag tag-accent" : "tag tag-outline"}>
+								{tag.label}
+							</span>
+						))}
 					</div>
 				</section>
 
