@@ -64,3 +64,34 @@ export interface Faq {
 	q: string;
 	a: string;
 }
+
+export interface CompanyInfo {
+	phone: string;
+	email: string;
+	yardSuburb: string;
+	hours: string;
+	legalName: string;
+	abn: string;
+	coverage: string;
+}
+
+export interface AboutContent {
+	headline: string;
+	intro: string;
+	whoHeading: string;
+	whoBody: string;
+	compliantHeading: string;
+	compliantBody: string;
+	yardBody: string;
+	/** R2 key served via /media; null renders the placeholder frame. */
+	crewImageKey: string | null;
+	crewImageAlt: string;
+	yardImageKey: string | null;
+	yardImageAlt: string;
+}
+
+export interface ComplianceTag {
+	id: string;
+	label: string;
+	accent: boolean;
+}
