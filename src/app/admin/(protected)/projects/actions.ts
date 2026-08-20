@@ -146,6 +146,19 @@ export async function deleteProjectPhotoAction(formData: FormData): Promise<void
 	if (!id || !projectId) return;
 
 	const { env } = await getCloudflareContext({ async: true });
+
+	// A project keeps at least one photo: the cover shown on the projects
+	// page and the home marquee is just the lowest-sorted gallery photo, so
+	// removing the last one would leave a placeholder frame on the live site.
+	// The Delete button is disabled in that state too — this is the guard for
+	// a submission that gets past the UI.
+	const remaining = await env.DB.prepare("SELECT COUNT(*) AS n FROM project_images WHERE project_id = ?")
+		.bind(projectId)
+		.first<{ n: number }>();
+	if ((remaining?.n ?? 0) <= 1) {
+		redirect(`/admin/projects/${projectId}/edit`);
+	}
+
 	const existing = await env.DB.prepare("SELECT image_key FROM project_images WHERE id = ? AND project_id = ?")
 		.bind(id, projectId)
 		.first<{ image_key: string }>();

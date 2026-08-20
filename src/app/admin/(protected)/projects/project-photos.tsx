@@ -44,7 +44,8 @@ export default function ProjectPhotos({ projectId, photos }: { projectId: string
 				Photos
 			</h2>
 			<p style={{ fontSize: 13, lineHeight: "20px", margin: "0 0 16px", color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>
-				The photo with the lowest sort order is the cover shown on the projects page and home marquee.
+				The photo with the lowest sort order is the cover shown on the projects page and home marquee. Every project keeps at least one photo, so
+				the last one can&rsquo;t be deleted — upload its replacement first, then remove the old one.
 			</p>
 
 			{photos.map((photo) => (
@@ -68,7 +69,14 @@ export default function ProjectPhotos({ projectId, photos }: { projectId: string
 					<button type="submit" className="btn" style={{ minHeight: 38 }}>
 						Save
 					</button>
-					<button type="submit" className="btn" style={{ minHeight: 38 }} formAction={deleteProjectPhotoAction}>
+					<button
+						type="submit"
+						className="btn"
+						style={{ minHeight: 38 }}
+						formAction={deleteProjectPhotoAction}
+						disabled={photos.length === 1}
+						title={photos.length === 1 ? "A project keeps at least one photo — upload another before removing this one." : undefined}
+					>
 						Delete
 					</button>
 				</form>
