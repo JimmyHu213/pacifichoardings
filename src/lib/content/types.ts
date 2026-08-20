@@ -15,9 +15,10 @@ export interface ServiceProcessStep {
 	detail: string;
 }
 
-export interface ServiceImage {
-	placeholder: string;
-	label: string;
+export interface ServiceImageSlot {
+	/** R2 key served via /media; null renders the placeholder frame. */
+	key: string | null;
+	alt: string;
 }
 
 export interface Service {
@@ -30,7 +31,7 @@ export interface Service {
 	specs: ServiceSpec[];
 	process: ServiceProcessStep[];
 	complianceTags: string[];
-	images: ServiceImage[];
+	images: ServiceImageSlot[];
 	faqIds: string[];
 }
 

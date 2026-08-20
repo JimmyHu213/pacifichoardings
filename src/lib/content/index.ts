@@ -14,9 +14,9 @@ import {
 	statsFallback,
 	testimonialsFallback,
 } from "./fallbacks";
-import type { AboutContent, CompanyInfo, ComplianceTag, Faq, Project, Stat, Testimonial } from "./types";
+import type { AboutContent, CompanyInfo, ComplianceTag, Faq, Project, Service, Stat, Testimonial } from "./types";
 
-export type { Stat, Service, Project, ProjectImage, Testimonial, Faq, CompanyInfo, AboutContent, ComplianceTag } from "./types";
+export type { Stat, Service, ServiceImageSlot, Project, ProjectImage, Testimonial, Faq, CompanyInfo, AboutContent, ComplianceTag } from "./types";
 
 // Settings reads are prefix-scoped so company and about fetches stay cheap.
 async function getSiteSettings(prefix: string): Promise<Map<string, string>> {
@@ -109,8 +109,47 @@ export async function getComplianceTags(): Promise<ComplianceTag[]> {
 	}
 }
 
-export async function getServices() {
-	return services;
+interface ServiceRow {
+	slug: string;
+	title: string;
+	body: string;
+	tagline: string;
+	overview: string;
+	when_you_need_it: string;
+	specs: string;
+	process: string;
+	compliance_tags: string;
+	faq_ids: string;
+	images: string;
+}
+
+export async function getServices(): Promise<Service[]> {
+	try {
+		const { env } = await getCloudflareContext({ async: true });
+		const { results } = await env.DB.prepare(
+			"SELECT slug, title, body, tagline, overview, when_you_need_it, specs, process, compliance_tags, faq_ids, images FROM services ORDER BY rowid",
+		).all<ServiceRow>();
+		if (results.length === 0) return services;
+		return results.map((row) => ({
+			slug: row.slug,
+			title: row.title,
+			body: row.body,
+			tagline: row.tagline,
+			overview: row.overview,
+			whenYouNeedIt: row.when_you_need_it,
+			specs: JSON.parse(row.specs),
+			process: JSON.parse(row.process),
+			complianceTags: JSON.parse(row.compliance_tags),
+			faqIds: JSON.parse(row.faq_ids),
+			images: (JSON.parse(row.images) as { key: string; alt: string }[]).map((img) => ({
+				key: img.key || null,
+				alt: img.alt,
+			})),
+		}));
+	} catch (error) {
+		console.error("Failed to load services from D1", error);
+		return services;
+	}
 }
 
 interface ProjectRow {

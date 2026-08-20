@@ -24,8 +24,8 @@ export const services: Service[] = [
 		],
 		complianceTags: ["AS 4687 certified", "SafeWork NSW compliant", "Licensed installers"],
 		images: [
-			{ placeholder: "Drop a photo — Class A hoarding on a live site", label: "Class A hoarding installed on site" },
-			{ placeholder: "Drop a photo — pedestrian gate and signage detail", label: "Class A hoarding gate and signage detail" },
+			{ key: null, alt: "Class A hoarding installed on site" },
+			{ key: null, alt: "Class A hoarding gate and signage detail" },
 		],
 		faqIds: ["council-approval", "class-a-vs-class-b", "install-speed"],
 	},
@@ -52,8 +52,8 @@ export const services: Service[] = [
 		],
 		complianceTags: ["AS/NZS 1170 engineered", "Engineer-signed load case", "SafeWork NSW compliant"],
 		images: [
-			{ placeholder: "Drop a photo — Class B gantry over a live footpath", label: "Class B overhead gantry deck" },
-			{ placeholder: "Drop a photo — under-awning lighting detail", label: "Class B under-awning lighting" },
+			{ key: null, alt: "Class B overhead gantry deck" },
+			{ key: null, alt: "Class B under-awning lighting" },
 		],
 		faqIds: ["class-a-vs-class-b", "certification", "install-speed"],
 	},
@@ -80,8 +80,8 @@ export const services: Service[] = [
 		],
 		complianceTags: ["AS 4687 certified", "Engineer-signed documentation"],
 		images: [
-			{ placeholder: "Drop a photo — engineering drawing or site plan", label: "Certified hoarding drawing" },
-			{ placeholder: "Drop a photo — engineer reviewing drawings on site", label: "Engineering sign-off on site" },
+			{ key: null, alt: "Certified hoarding drawing" },
+			{ key: null, alt: "Engineering sign-off on site" },
 		],
 		faqIds: ["certification", "class-a-vs-class-b"],
 	},
@@ -108,8 +108,8 @@ export const services: Service[] = [
 		],
 		complianceTags: ["Council-ready documentation", "AS 4687 certified"],
 		images: [
-			{ placeholder: "Drop a photo — hoarding permit or approval documentation", label: "Council permit documentation" },
-			{ placeholder: "Drop a photo — hoarding on a public footpath", label: "Permitted hoarding on public footpath" },
+			{ key: null, alt: "Council permit documentation" },
+			{ key: null, alt: "Permitted hoarding on public footpath" },
 		],
 		faqIds: ["council-approval"],
 	},
