@@ -587,8 +587,8 @@ export default async function Home() {
 						<div style={{ marginTop: 32, fontSize: 15, lineHeight: "28px" }}>
 							<div>
 								<strong style={{ fontWeight: 600 }}>Phone</strong> —{" "}
-								<a href="tel:0240545107" style={{ color: "var(--color-accent-300)" }}>
-									02 4054 5107
+								<a href="tel:1300722477" style={{ color: "var(--color-accent-300)" }}>
+									1300 722 477
 								</a>
 							</div>
 							<div>
