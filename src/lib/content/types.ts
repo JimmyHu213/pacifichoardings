@@ -23,6 +23,8 @@ export interface ServiceImageSlot {
 
 export interface Service {
 	slug: string;
+	/** Display order across the nav, home list and related-services blocks. */
+	sortOrder: number;
 	title: string;
 	body: string;
 	tagline: string;

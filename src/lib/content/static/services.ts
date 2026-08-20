@@ -1,8 +1,15 @@
+// Compiled-in fallback ONLY. D1 is the source of truth for which services
+// exist — the client adds and removes them from /admin/services. This array
+// is a frozen snapshot used when D1 is unreachable, so during an outage a
+// recently added service is missing and a recently removed one reappears.
+// Keep it roughly current, but never treat it as authoritative.
+
 import type { Service } from "../types";
 
 export const services: Service[] = [
 	{
 		slug: "class-a-hoarding",
+		sortOrder: 0,
 		title: "Class A hoarding",
 		body: "Fence-type hoarding at ground level — solid, plumb and lockable. Steel-framed ply or panel systems with dust control, sightline screening and pedestrian doors where the site needs them.",
 		tagline: "Ground-level hoarding that stands straight and locks up tight.",
@@ -31,6 +38,7 @@ export const services: Service[] = [
 	},
 	{
 		slug: "class-b-hoarding",
+		sortOrder: 1,
 		title: "Class B hoarding",
 		body: "Overhead gantry protection where work happens above a footpath. Engineered decks rated to the drawings, under-awning lighting, and certification the council accepts.",
 		tagline: "Overhead protection engineered for the load, not just the look.",
@@ -59,6 +67,7 @@ export const services: Service[] = [
 	},
 	{
 		slug: "design-certification",
+		sortOrder: 2,
 		title: "Design & certification",
 		body: "Every hoarding drawn and signed to AS 4687 by our engineers. Load cases, tie-downs and documentation your certifier accepts the first time.",
 		tagline: "Every hoarding signed off before it's stood, not after.",
