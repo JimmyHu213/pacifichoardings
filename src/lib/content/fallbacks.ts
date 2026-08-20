@@ -21,7 +21,7 @@ export const aboutContentFallback: AboutContent = {
 	whoBody: "We started as a hoarding installer and became the crew builders call when the paperwork matters as much as the panels. Every job still runs the same way — one crew stands it, one engineer signs it, and the same point of contact answers the phone from quote to dismantle.",
 	compliantHeading: "Compliant is the minimum",
 	compliantBody: "Anyone can stand a fence. We design and certify every hoarding to AS 4687, walk it past council before the first panel goes up, and keep it standing through the wind study, the inspection and eighteen months of the public leaning on it. Compliant is the floor we build from, not the ceiling we aim for.",
-	yardBody: "Every panel and gantry goes out of the same Morisset yard, measured and staged against the site plan before the truck leaves. It's also where the paperwork gets filed — one address for the whole job.",
+	yardBody: "Every panel and gantry goes out of the same Morisset yard, measured and staged against the site plan before the truck leaves. It’s also where the paperwork gets filed — one address for the whole job.",
 	crewImageKey: null,
 	crewImageAlt: "Pacific Hoardings crew on site",
 	yardImageKey: null,
