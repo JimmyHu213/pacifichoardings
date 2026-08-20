@@ -3,7 +3,7 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { redirect } from "next/navigation";
 import { requireAdminSession } from "@/lib/admin-auth";
-import { services } from "@/lib/content/static/services";
+import { getServices } from "@/lib/content";
 
 export type ProjectFormState = { status: "idle" } | { status: "error"; message: string };
 export type PhotoFormState = { status: "idle" } | { status: "error"; message: string };
@@ -13,7 +13,6 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 // Allowlist, not startsWith("image/") — image/svg+xml can carry scripts and
 // /media serves from the app origin.
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"]);
-const SERVICE_SLUGS = new Set(services.map((s) => s.slug));
 
 function field(formData: FormData, key: string, maxLength: number): string {
 	const value = formData.get(key);
@@ -35,7 +34,8 @@ export async function saveProjectAction(_prevState: ProjectFormState, formData: 
 	if (!title) return { status: "error", message: "Add a title." };
 	if (!SLUG_PATTERN.test(slug)) return { status: "error", message: "Slug must be lowercase letters, numbers and hyphens." };
 	if (!detail) return { status: "error", message: "Add the one-line detail (shown on the home marquee)." };
-	if (!SERVICE_SLUGS.has(serviceSlug)) return { status: "error", message: "Pick the service this project belongs to." };
+	const serviceSlugs = new Set((await getServices()).map((s) => s.slug));
+	if (!serviceSlugs.has(serviceSlug)) return { status: "error", message: "Pick the service this project belongs to." };
 	if (!timeframe) return { status: "error", message: "Add the timeframe." };
 	if (!description) return { status: "error", message: "Add the description." };
 	if (Number.isNaN(sortOrder)) return { status: "error", message: "Sort order must be a number." };

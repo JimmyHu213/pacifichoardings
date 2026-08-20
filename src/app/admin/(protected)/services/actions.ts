@@ -2,7 +2,6 @@
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { requireAdminSession } from "@/lib/admin-auth";
-import { services as staticServices } from "@/lib/content/static/services";
 
 export type ServiceFormState = { status: "idle" } | { status: "saved" } | { status: "error"; message: string };
 
@@ -10,8 +9,7 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 // Allowlist, not startsWith("image/") — image/svg+xml can carry scripts and
 // /media serves from the app origin.
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"]);
-// The four services are fixed — slugs are never created, deleted or renamed.
-const SERVICE_SLUGS = new Set(staticServices.map((s) => s.slug));
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function field(formData: FormData, key: string, maxLength: number): string {
 	const value = formData.get(key);
@@ -22,7 +20,9 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 	await requireAdminSession();
 
 	const slug = field(formData, "slug", 100);
-	if (!SERVICE_SLUGS.has(slug)) return { status: "error", message: "Unknown service." };
+	// Slugs are locked after creation — this action only ever updates an
+	// existing row, and the pre-flight read below rejects unknown slugs.
+	if (!SLUG_PATTERN.test(slug)) return { status: "error", message: "Unknown service." };
 
 	const title = field(formData, "title", 100);
 	const tagline = field(formData, "tagline", 200);
@@ -74,7 +74,7 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 	let images: { key: string; alt: string }[];
 	try {
 		const existing = await env.DB.prepare("SELECT images FROM services WHERE slug = ?").bind(slug).first<{ images: string }>();
-		if (!existing) return { status: "error", message: "That service isn't in the database yet — apply the migration first." };
+		if (!existing) return { status: "error", message: "That service no longer exists." };
 		images = (JSON.parse(existing.images) as { key: string; alt: string }[]).map((img, i) => ({ key: img.key, alt: alts[i] }));
 	} catch (error) {
 		console.error("Service pre-flight read failed", error);
