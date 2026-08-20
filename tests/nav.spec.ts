@@ -7,7 +7,7 @@ test.describe('desktop services dropdown', () => {
 
     const panel = page.locator('.nav-desktop .nav-dropdown-panel');
     await expect(panel).toBeVisible();
-    await expect(panel.getByRole('link')).toHaveCount(4);
+    await expect(panel.getByRole('link')).toHaveCount(3);
 
     await panel.getByRole('link', { name: 'Class A hoarding' }).click();
     await expect(page).toHaveURL(/\/services\/class-a-hoarding$/);
@@ -57,8 +57,8 @@ test.describe('mobile menu', () => {
 
 test.describe('service page', () => {
   test('renders scaffold content with quote CTA', async ({ page }) => {
-    await page.goto('/services/council-permits');
-    await expect(page.locator('h1')).toHaveText(/council permits/i);
+    await page.goto('/services/design-certification');
+    await expect(page.locator('h1')).toHaveText(/design & certification/i);
     await expect(page.getByRole('link', { name: 'Request a quote' }).last()).toHaveAttribute('href', '/#quote');
   });
 });
