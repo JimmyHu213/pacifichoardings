@@ -10,7 +10,7 @@ import MobileMenu from "./mobile-menu";
 /* Home page sits over the full-bleed hero video, so the nav there is a
    transparent overlay with light text. Every other page is a normal light
    page and gets a sticky, solid nav instead. */
-export default function SiteHeader({ services }: { services: Service[] }) {
+export default function SiteHeader({ services, phone }: { services: Service[]; phone: string }) {
 	const pathname = usePathname();
 	const isOverlay = pathname === "/";
 
@@ -66,10 +66,10 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 					</Link>
 				))}
 				<a
-					href="tel:1300722477"
+					href={`tel:${phone.replace(/[^\d+]/g, "")}`}
 					style={{ whiteSpace: "nowrap", color: isOverlay ? "var(--color-bg)" : "var(--color-text)", fontFeatureSettings: "'tnum' 1", fontWeight: 600 }}
 				>
-					1300 722 477
+					{phone}
 				</a>
 				<Link
 					href={anchor("quote")}
@@ -88,7 +88,7 @@ export default function SiteHeader({ services }: { services: Service[] }) {
 				</Link>
 			</div>
 
-			<MobileMenu servicesItems={serviceLinks} links={anchorLinks} quoteHref={anchor("quote")} />
+			<MobileMenu servicesItems={serviceLinks} links={anchorLinks} quoteHref={anchor("quote")} phone={phone} />
 		</nav>
 	);
 }

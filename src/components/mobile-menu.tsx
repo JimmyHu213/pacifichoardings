@@ -9,10 +9,12 @@ export default function MobileMenu({
 	servicesItems,
 	links,
 	quoteHref,
+	phone,
 }: {
 	servicesItems: NavDropdownItem[];
 	links: NavDropdownItem[];
 	quoteHref: string;
+	phone: string;
 }) {
 	const [open, setOpen] = useState(false);
 	const pathname = usePathname();
@@ -58,8 +60,8 @@ export default function MobileMenu({
 						{link.label}
 					</Link>
 				))}
-				<a href="tel:1300722477" className="mobile-menu-link" onClick={() => setOpen(false)}>
-					1300 722 477
+				<a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="mobile-menu-link" onClick={() => setOpen(false)}>
+					{phone}
 				</a>
 				<Link href={quoteHref} className="mobile-menu-cta" onClick={() => setOpen(false)}>
 					Request a quote

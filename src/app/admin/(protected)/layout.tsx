@@ -21,6 +21,12 @@ const NAV_GROUPS: AdminNavGroup[] = [
 		items: [
 			{ href: "/admin/projects", label: "Projects" },
 			{ href: "/admin/faqs", label: "FAQs" },
+			{ href: "/admin/company", label: "Company info" },
+			{ href: "/admin/about", label: "About page" },
+			{ href: "/admin/stats", label: "Stats" },
+			{ href: "/admin/testimonials", label: "Testimonials" },
+			{ href: "/admin/clients", label: "Clients" },
+			{ href: "/admin/compliance-tags", label: "Compliance tags" },
 		],
 	},
 ];
