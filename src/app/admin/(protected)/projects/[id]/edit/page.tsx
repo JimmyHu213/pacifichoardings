@@ -4,6 +4,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { services } from "@/lib/content/static/services";
 import { pageGutter } from "@/lib/style-tokens";
 import ProjectForm from "../../project-form";
+import ProjectPhotos from "../../project-photos";
 
 export const metadata: Metadata = { title: "Edit project — Pacific Hoardings Admin" };
 
@@ -17,7 +18,12 @@ interface ProjectEditRow {
 	service_slug: string;
 	timeframe: string;
 	description: string;
-	image_key: string | null;
+	sort_order: number;
+}
+
+interface PhotoRow {
+	id: number;
+	image_key: string;
 	image_alt: string | null;
 	sort_order: number;
 }
@@ -26,7 +32,7 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
 	const { id } = await params;
 	const { env } = await getCloudflareContext({ async: true });
 	const row = await env.DB.prepare(
-		"SELECT id, slug, title, detail, service_slug, timeframe, description, image_key, image_alt, sort_order FROM projects WHERE id = ?",
+		"SELECT id, slug, title, detail, service_slug, timeframe, description, sort_order FROM projects WHERE id = ?",
 	)
 		.bind(id)
 		.first<ProjectEditRow>();
@@ -34,6 +40,12 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
 	if (!row) {
 		notFound();
 	}
+
+	const { results: photos } = await env.DB.prepare(
+		"SELECT id, image_key, image_alt, sort_order FROM project_images WHERE project_id = ? ORDER BY sort_order, id",
+	)
+		.bind(id)
+		.all<PhotoRow>();
 
 	return (
 		<div style={{ maxWidth: 1400, margin: "0 auto", padding: `32px ${pageGutter} 64px` }}>
@@ -50,10 +62,12 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
 					serviceSlug: row.service_slug,
 					timeframe: row.timeframe,
 					description: row.description,
-					imageKey: row.image_key,
-					imageAlt: row.image_alt ?? "",
 					sortOrder: row.sort_order,
 				}}
+			/>
+			<ProjectPhotos
+				projectId={String(row.id)}
+				photos={photos.map((p) => ({ id: String(p.id), imageKey: p.image_key, imageAlt: p.image_alt ?? "", sortOrder: p.sort_order }))}
 			/>
 		</div>
 	);

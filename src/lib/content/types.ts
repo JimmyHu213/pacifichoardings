@@ -46,12 +46,16 @@ export interface ProjectImage {
 
 export interface Project {
 	id: string;
+	slug: string;
 	title: string;
 	detail: string;
 	serviceSlug: string;
 	timeframe: string;
 	description: string;
-	image: ProjectImage;
+	/** First gallery photo, or a placeholder-frame shape when the project has none. */
+	cover: ProjectImage;
+	/** All gallery photos in sort order — every entry has a non-null key. */
+	images: ProjectImage[];
 }
 
 export interface Testimonial {

@@ -10,12 +10,22 @@
 
 ## Global Constraints
 
-- **Never commit or push to `main`.** All work happens on branch `feat/admin-cms`; when this plan is executed, the branch will be created fresh off `main` (galleries are PR 2 in the reordered delivery). PR into `main` when done.
+- **Never commit or push to `main`.** All work happens on branch `feat/project-galleries` (created fresh off `main` 2026-08-20). PR into `main` when done.
 - Conventional Commits (`feat:`, `fix:`, `test:`, `docs:`, …).
 - Tabs for indentation in `src/` (match existing files); 2-space in `tests/` (match existing specs).
 - Image upload rules (copy exactly from existing code): allowlist `image/jpeg, image/png, image/webp, image/avif, image/gif`; max `5 * 1024 * 1024` bytes; never orphan an R2 object on a failed write; old objects deleted only after D1 commits.
-- Playwright dev server runs `next dev -p 3299` against **local** D1 state — apply migrations locally with `npx wrangler d1 migrations apply DB --local` before running tests.
+- Playwright dev server runs `next dev -p 3299` against **local** D1 state — apply migrations locally with `npx wrangler d1 migrations apply pacifichoardings-db --local` before running tests.
 - Spec: `docs/superpowers/specs/2026-08-14-admin-cms-design.md`.
+
+**2026-08-20 execution amendments** (repo moved since this plan was written):
+
+- The migration file is **`migrations/0008_create_project_images.sql`** — 0006 (OTP codes) and 0007 (site content) now exist. Every `0006_create_project_images` reference below reads as 0008.
+- The D1 database name is **`pacifichoardings-db`** wherever a command says `DB`.
+- **Every exported server action in the rewritten `projects/actions.ts` must call `await requireAdminSession();` as its first statement** (import from `@/lib/admin-auth` — added in CMS PR 1; server actions are standalone POST endpoints, the layout guard doesn't cover them). This applies to all five: `saveProjectAction`, `addProjectPhotoAction`, `updateProjectPhotoAction`, `deleteProjectPhotoAction`, `deleteProjectAction`.
+- Local D1 currently has **6** project photos, not 7 — Task 1's verification expects one `project_images` row per project with a non-null `image_key` (verify the count matches `SELECT COUNT(*) FROM projects WHERE image_key IS NOT NULL` run BEFORE applying).
+- Task 5's gate additionally runs `npm run test:unit` (vitest exists since CMS PR 1), and the push/PR use branch `feat/project-galleries`.
+- Prefix every node/npm/npx command with `NODE_OPTIONS= ` (broken shell preload on this machine).
+- The Playwright suite now has 14 pre-existing specs (admin-login, site-content added since) — all must stay green.
 
 ---
 

@@ -53,17 +53,21 @@ export default async function ProjectsPage() {
 										{String(i + 1).padStart(2, "0")}
 									</span>
 									<div className="ph-proj-media">
-										<figure className="blueprint duotone" style={{ margin: 0 }}>
-											<ProjectImage image={project.image} />
-											<Corners />
-										</figure>
+										<Link href={`/projects/${project.slug}`} aria-label={`${project.title} project details`}>
+											<figure className="blueprint duotone" style={{ margin: 0 }}>
+												<ProjectImage image={project.cover} />
+												<Corners />
+											</figure>
+										</Link>
 									</div>
 									<div className="ph-proj-body">
 										<Link href={`/services/${project.serviceSlug}`} className="tag tag-accent" style={{ textDecoration: "none" }}>
 											{serviceTitleBySlug.get(project.serviceSlug)}
 										</Link>
 										<h2 style={{ fontSize: 22, lineHeight: "24px", letterSpacing: "0.02em", textTransform: "uppercase", margin: "12px 0 4px" }}>
-											{project.title}
+											<Link href={`/projects/${project.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
+												{project.title}
+											</Link>
 										</h2>
 										<p
 											style={{

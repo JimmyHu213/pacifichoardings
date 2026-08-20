@@ -4,6 +4,7 @@
 // services stay in static TS — see the plan for why. See .planning/DEV-PLAN.md §4
 // for the original design note.
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { cache } from "react";
 import { services } from "./static/services";
 import {
 	aboutContentFallback,
@@ -114,44 +115,81 @@ export async function getServices() {
 
 interface ProjectRow {
 	id: number;
+	slug: string;
 	title: string;
 	detail: string;
 	service_slug: string;
 	timeframe: string;
 	description: string;
-	image_key: string | null;
+}
+
+interface ProjectImageRow {
+	project_id: number;
+	image_key: string;
 	image_alt: string | null;
-	image_width: number | null;
-	image_height: number | null;
+	width: number | null;
+	height: number | null;
+}
+
+function toProject(row: ProjectRow, imageRows: ProjectImageRow[]): Project {
+	const images = imageRows.map((img) => ({
+		placeholder: img.image_alt ?? `Drop a photo — ${row.title}`,
+		label: img.image_alt ?? row.title,
+		key: img.image_key,
+		width: img.width,
+		height: img.height,
+	}));
+	return {
+		id: String(row.id),
+		slug: row.slug,
+		title: row.title,
+		detail: row.detail,
+		serviceSlug: row.service_slug,
+		timeframe: row.timeframe,
+		description: row.description,
+		cover: images[0] ?? { placeholder: `Drop a photo — ${row.title}`, label: row.title, key: null, width: null, height: null },
+		images,
+	};
 }
 
 export async function getProjects(): Promise<Project[]> {
 	try {
 		const { env } = await getCloudflareContext({ async: true });
-		const { results } = await env.DB.prepare(
-			"SELECT id, title, detail, service_slug, timeframe, description, image_key, image_alt, image_width, image_height FROM projects ORDER BY sort_order, id",
-		).all<ProjectRow>();
-
-		return results.map((row) => ({
-			id: String(row.id),
-			title: row.title,
-			detail: row.detail,
-			serviceSlug: row.service_slug,
-			timeframe: row.timeframe,
-			description: row.description,
-			image: {
-				placeholder: row.image_alt ?? `Drop a photo — ${row.title}`,
-				label: row.image_alt ?? row.title,
-				key: row.image_key,
-				width: row.image_width,
-				height: row.image_height,
-			},
-		}));
+		const [{ results: rows }, { results: imageRows }] = await Promise.all([
+			env.DB.prepare(
+				"SELECT id, slug, title, detail, service_slug, timeframe, description FROM projects ORDER BY sort_order, id",
+			).all<ProjectRow>(),
+			env.DB.prepare(
+				"SELECT project_id, image_key, image_alt, width, height FROM project_images ORDER BY sort_order, id",
+			).all<ProjectImageRow>(),
+		]);
+		return rows.map((row) => toProject(row, imageRows.filter((img) => img.project_id === row.id)));
 	} catch (error) {
 		console.error("Failed to load projects from D1", error);
 		return [];
 	}
 }
+
+export const getProject = cache(async (slug: string): Promise<Project | null> => {
+	try {
+		const { env } = await getCloudflareContext({ async: true });
+		const row = await env.DB.prepare(
+			"SELECT id, slug, title, detail, service_slug, timeframe, description FROM projects WHERE slug = ?",
+		)
+			.bind(slug)
+			.first<ProjectRow>();
+		if (!row) return null;
+		const { results: imageRows } = await env.DB.prepare(
+			"SELECT project_id, image_key, image_alt, width, height FROM project_images WHERE project_id = ? ORDER BY sort_order, id",
+		)
+			.bind(row.id)
+			.all<ProjectImageRow>();
+		return toProject(row, imageRows);
+	} catch (error) {
+		console.error("Failed to load project from D1", error);
+		return null;
+	}
+});
 
 export async function getTestimonials(): Promise<Testimonial[]> {
 	try {
