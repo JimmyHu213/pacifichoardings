@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { SESSION_COOKIE_NAME, verifySessionCookieValue } from "@/lib/admin-session";
 import { logoutAction } from "../actions";
 import AdminNav, { type AdminNavGroup } from "./admin-nav";
+import AdminReady from "./admin-ready";
 
 export const metadata: Metadata = {
 	title: "Pacific Hoardings — Admin",
@@ -47,6 +48,7 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
 	return (
 		<div className="admin-shell">
 			<AdminNav groups={NAV_GROUPS}>
+				<AdminReady />
 				<a className="admin-nav-link" href="/" target="_blank" rel="noopener">
 					View site ↗
 				</a>
