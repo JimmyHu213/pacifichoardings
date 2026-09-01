@@ -21,19 +21,19 @@
     "react-dom": "^19.1.7"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.2.1",
+    "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/eslintrc": "^3",
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.43",
     "@types/react": "^19.1.7",
     "@types/react-dom": "^19.1.7",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.3.3",
     "tailwindcss": "^4",
     "typescript": "^5.7.4",
     "vitest": "^4.1.11",
-    "wrangler": "^4.112.0"
+    "wrangler": "^4.127.1"
   }
 }
