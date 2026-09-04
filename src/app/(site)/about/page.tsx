@@ -11,6 +11,12 @@ export const metadata: Metadata = {
 	description: "One crew, one engineer, every hoarding — who we are and how Pacific Hoardings runs a job from quote to dismantle.",
 };
 
+// Everything on this page comes from D1 and is editable from the admin, so it
+// has to be rendered per request. The (site) layout already forces that, but
+// every sibling page states it too — leaving this one implicit is how a page
+// quietly starts serving stale content if that layout config ever narrows.
+export const dynamic = "force-dynamic";
+
 export default async function AboutPage() {
 	const [stats, clients, about, tags] = await Promise.all([getStats(), getClients(), getAboutContent(), getComplianceTags()]);
 

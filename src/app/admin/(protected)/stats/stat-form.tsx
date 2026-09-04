@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import { saveStatAction, type StatFormState } from "./actions";
 
 const initialState: StatFormState = { status: "idle" };
@@ -16,9 +17,10 @@ export interface StatFormValues {
 
 export default function StatForm({ initial }: { initial?: StatFormValues }) {
 	const [state, formAction, isPending] = useActionState(saveStatAction, initialState);
+	const formRef = useRestoreOnError(state);
 
 	return (
-		<form action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
+		<form ref={formRef} action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
 			{state.status === "error" && (
 				<div
 					role="alert"

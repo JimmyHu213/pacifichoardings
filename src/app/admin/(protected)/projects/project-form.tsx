@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import { saveProjectAction, type ProjectFormState } from "./actions";
 
 const initialState: ProjectFormState = { status: "idle" };
@@ -24,9 +25,10 @@ export default function ProjectForm({
 	serviceOptions: { slug: string; title: string }[];
 }) {
 	const [state, formAction, isPending] = useActionState(saveProjectAction, initialState);
+	const formRef = useRestoreOnError(state);
 
 	return (
-		<form action={formAction} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, maxWidth: 760 }}>
+		<form ref={formRef} action={formAction} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, maxWidth: 760 }}>
 			{state.status === "error" && (
 				<div
 					role="alert"

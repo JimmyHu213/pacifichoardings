@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import type { CompanyInfo } from "@/lib/content";
 import { saveCompanyAction, type CompanyFormState } from "./actions";
 
@@ -18,9 +19,10 @@ const FIELDS: { name: string; label: string; value: (c: CompanyInfo) => string }
 
 export default function CompanyForm({ initial }: { initial: CompanyInfo }) {
 	const [state, formAction, isPending] = useActionState(saveCompanyAction, initialState);
+	const formRef = useRestoreOnError(state);
 
 	return (
-		<form action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
+		<form ref={formRef} action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
 			{state.status === "error" && (
 				<div
 					role="alert"

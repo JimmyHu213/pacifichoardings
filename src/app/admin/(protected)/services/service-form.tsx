@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import { createServiceAction, saveServiceAction, type ServiceFormState } from "./actions";
 
 const initialState: ServiceFormState = { status: "idle" };
@@ -60,9 +61,10 @@ function PhotoSlot({
 export default function ServiceForm({ initial, defaultSortOrder }: { initial?: ServiceFormValues; defaultSortOrder?: number }) {
 	const isEdit = Boolean(initial);
 	const [state, formAction, isPending] = useActionState(isEdit ? saveServiceAction : createServiceAction, initialState);
+	const formRef = useRestoreOnError(state);
 
 	return (
-		<form action={formAction} style={{ display: "grid", gap: 16, maxWidth: 720 }}>
+		<form ref={formRef} action={formAction} style={{ display: "grid", gap: 16, maxWidth: 720 }}>
 			{state.status === "error" && (
 				<div role="alert" style={{ padding: "12px 14px", border: "1px solid var(--color-divider)", borderLeft: "3px solid var(--color-accent-700)", background: "var(--color-surface)", fontSize: 13, lineHeight: "20px" }}>
 					{state.message}

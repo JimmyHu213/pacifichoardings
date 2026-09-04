@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import { saveFaqAction, type FaqFormState } from "./actions";
 
 const initialState: FaqFormState = { status: "idle" };
@@ -14,10 +15,11 @@ export interface FaqFormValues {
 
 export default function FaqForm({ initial }: { initial?: FaqFormValues }) {
 	const [state, formAction, isPending] = useActionState(saveFaqAction, initialState);
+	const formRef = useRestoreOnError(state);
 	const isEdit = Boolean(initial);
 
 	return (
-		<form action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
+		<form ref={formRef} action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
 			{state.status === "error" && (
 				<div
 					role="alert"
