@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import {
 	addProjectPhotoAction,
 	deleteProjectPhotoAction,
@@ -19,6 +20,7 @@ export interface ProjectPhotoValues {
 
 export default function ProjectPhotos({ projectId, photos }: { projectId: string; photos: ProjectPhotoValues[] }) {
 	const [state, addAction, isPending] = useActionState(addProjectPhotoAction, initialState);
+	const formRef = useRestoreOnError(state);
 	const [dims, setDims] = useState<{ width: number; height: number } | null>(null);
 
 	async function onFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -82,7 +84,7 @@ export default function ProjectPhotos({ projectId, photos }: { projectId: string
 				</form>
 			))}
 
-			<form action={addAction} style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: 12, padding: "14px 0", borderTop: "1px solid var(--color-divider)" }}>
+			<form ref={formRef} action={addAction} style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: 12, padding: "14px 0", borderTop: "1px solid var(--color-divider)" }}>
 				{state.status === "error" && (
 					<div
 						role="alert"

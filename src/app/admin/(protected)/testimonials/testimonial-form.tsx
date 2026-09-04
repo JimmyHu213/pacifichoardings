@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import { saveTestimonialAction, type TestimonialFormState } from "./actions";
 
 const initialState: TestimonialFormState = { status: "idle" };
@@ -14,9 +15,10 @@ export interface TestimonialFormValues {
 
 export default function TestimonialForm({ initial }: { initial?: TestimonialFormValues }) {
 	const [state, formAction, isPending] = useActionState(saveTestimonialAction, initialState);
+	const formRef = useRestoreOnError(state);
 
 	return (
-		<form action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
+		<form ref={formRef} action={formAction} style={{ display: "grid", gap: 16, maxWidth: 640 }}>
 			{state.status === "error" && (
 				<div
 					role="alert"

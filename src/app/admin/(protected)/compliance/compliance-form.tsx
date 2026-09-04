@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useRestoreOnError } from "../use-restore-on-error";
 import type { ComplianceContent } from "@/lib/content";
 import { saveComplianceAction, type ComplianceFormState } from "./actions";
 
@@ -50,9 +51,10 @@ function CardGroupFieldset({ legend, prefix, cards }: { legend: string; prefix: 
 
 export default function ComplianceForm({ initial }: { initial: ComplianceContent }) {
 	const [state, formAction, isPending] = useActionState(saveComplianceAction, initialState);
+	const formRef = useRestoreOnError(state);
 
 	return (
-		<form action={formAction} style={{ display: "grid", gap: 16, maxWidth: 720 }}>
+		<form ref={formRef} action={formAction} style={{ display: "grid", gap: 16, maxWidth: 720 }}>
 			{state.status === "error" && (
 				<div role="alert" style={{ padding: "12px 14px", border: "1px solid var(--color-divider)", borderLeft: "3px solid var(--color-accent-700)", background: "var(--color-surface)", fontSize: 13, lineHeight: "20px" }}>
 					{state.message}
