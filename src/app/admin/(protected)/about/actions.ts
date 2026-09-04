@@ -1,6 +1,7 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
 
 export type AboutFormState = { status: "idle" } | { status: "saved" } | { status: "error"; message: string };
@@ -101,6 +102,13 @@ export async function saveAboutAction(_prevState: AboutFormState, formData: Form
 		console.error("About save failed", error);
 		return { status: "error", message: "Save failed — try again." };
 	}
+
+	// React resets these uncontrolled inputs to their defaultValue once the
+	// action settles, and those defaults come from the server. Without a
+	// revalidate the page keeps its pre-save data, so the fields visibly snap
+	// back to the old text and the save looks like it failed.
+	revalidatePath("/admin/about");
+	revalidatePath("/about");
 
 	return { status: "saved" };
 }
