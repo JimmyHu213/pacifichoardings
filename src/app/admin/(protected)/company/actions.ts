@@ -1,6 +1,7 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
 
 export type CompanyFormState = { status: "idle" } | { status: "saved" } | { status: "error"; message: string };
@@ -42,6 +43,13 @@ export async function saveCompanyAction(_prevState: CompanyFormState, formData: 
 		console.error("Company info save failed", error);
 		return { status: "error", message: "Save failed — try again." };
 	}
+
+	// Without this the form's inputs repopulate from pre-save server data when
+	// React resets them, making a successful save look like it did nothing.
+	// Company details also sit in the header and footer of every public page,
+	// hence revalidating from the root layout down.
+	revalidatePath("/admin/company");
+	revalidatePath("/", "layout");
 
 	return { status: "saved" };
 }

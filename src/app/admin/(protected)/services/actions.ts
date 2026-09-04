@@ -1,6 +1,7 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdminSession } from "@/lib/admin-auth";
 
@@ -131,6 +132,14 @@ export async function saveServiceAction(_prevState: ServiceFormState, formData: 
 		console.error("Service save failed", error);
 		return { status: "error", message: "Save failed — try again." };
 	}
+
+	// Without this the form's inputs repopulate from pre-save server data when
+	// React resets them, making a successful save look like it did nothing.
+	// Service titles also drive the header menu and the quote form's options
+	// on every public page, hence revalidating from the root layout down.
+	revalidatePath(`/admin/services/${slug}/edit`);
+	revalidatePath("/admin/services");
+	revalidatePath("/", "layout");
 
 	return { status: "saved" };
 }

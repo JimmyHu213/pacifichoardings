@@ -1,6 +1,7 @@
 "use server";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/admin-auth";
 
 export type ComplianceFormState = { status: "idle" } | { status: "saved" } | { status: "error"; message: string };
@@ -131,6 +132,11 @@ export async function saveComplianceAction(_prevState: ComplianceFormState, form
 		console.error("Compliance save failed", error);
 		return { status: "error", message: "Save failed — try again." };
 	}
+
+	// Without this the form's inputs repopulate from pre-save server data when
+	// React resets them, making a successful save look like it did nothing.
+	revalidatePath("/admin/compliance");
+	revalidatePath("/compliance");
 
 	return { status: "saved" };
 }
